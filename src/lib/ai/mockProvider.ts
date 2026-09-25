@@ -1,7 +1,9 @@
 import {
+  AI_SUGGESTED_WEIGHT,
   AiProviderError,
   type AiAssistRequest,
   type AiAssistResult,
+  type AiCriterionSuggestion,
   type AiDecisionContext,
   type AiProvider,
 } from './types'
@@ -108,9 +110,16 @@ function criteriaFor(context: AiDecisionContext): AiAssistResult {
   )
   const base = CATEGORY_CRITERIA[context.category] ?? CATEGORY_CRITERIA.other
 
-  const items = base
+  // Structured as well as prose: the panel can add these to the decision in
+  // one click, which is the difference between advice and an action.
+  const suggestedCriteria: AiCriterionSuggestion[] = base
     .filter((label) => !existing.has(label.toLowerCase()))
-    .map((label) => `${label} — common for ${categoryName(context.category)} decisions`)
+    .map((label) => ({ label, weight: AI_SUGGESTED_WEIGHT }))
+
+  const items = suggestedCriteria.map(
+    (criterion) =>
+      `${criterion.label} — common for ${categoryName(context.category)} decisions`,
+  )
 
   if (items.length === 0) {
     items.push(
@@ -121,7 +130,11 @@ function criteriaFor(context: AiDecisionContext): AiAssistResult {
     items.push('With 3+ options, rank criteria before scoring to stay consistent.')
   }
 
-  return { heading: 'Criteria you may be missing', items: dedupe(items).slice(0, 4) }
+  return {
+    heading: 'Criteria you may be missing',
+    items: dedupe(items).slice(0, 4),
+    suggestedCriteria: suggestedCriteria.slice(0, 4),
+  }
 }
 
 function summaryFor(context: AiDecisionContext): AiAssistResult {

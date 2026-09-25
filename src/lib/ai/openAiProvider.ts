@@ -1,7 +1,9 @@
 import {
+  AI_SUGGESTED_WEIGHT,
   AiProviderError,
   type AiAssistRequest,
   type AiAssistResult,
+  type AiCriterionSuggestion,
   type AiProvider,
 } from './types'
 
@@ -18,7 +20,11 @@ function systemPrompt(capability: AiAssistRequest['capability']): string {
   return [
     'You are a concise decision-making assistant inside the Decision Desk app.',
     CAPABILITY_PROMPTS[capability],
-    'Respond ONLY with JSON: {"items": string[]}. No markdown, no preamble.',
+    capability === 'criteria-suggestions'
+      ? 'Respond ONLY with JSON: {"items": string[], "criteria": [{"label": string, "weight": number}]}. ' +
+        'Weights are 1 (barely matters) to 5 (decides it). Every criterion must also appear in items.'
+      : 'Respond ONLY with JSON: {"items": string[]}.',
+    'No markdown, no preamble.',
   ].join(' ')
 }
 
@@ -131,32 +137,94 @@ export class OpenAiCompatibleProvider implements AiProvider {
       throw new AiProviderError('AI returned no usable content.', this.id)
     }
 
-    return { heading: headings[request.capability], items: items.slice(0, 4) }
+    const suggestedCriteria = parseCriteria(content)
+
+    return {
+      heading: headings[request.capability],
+      items: items.slice(0, 4),
+      // Only meaningful for criteria suggestions; other capabilities return [].
+      ...(suggestedCriteria.length > 0 ? { suggestedCriteria } : {}),
+    }
   }
+}
+
+function isRecord(value: unknown): value is Record<string, unknown> {
+  return typeof value === 'object' && value !== null
+}
+
+/** Strips an optional markdown fence from a model response. */
+function unfence(content: string): string {
+  return content.trim().replace(/^```(?:json)?/i, '').replace(/```$/, '').trim()
+}
+
+function tryParseJson(content: string): unknown {
+  try {
+    return JSON.parse(unfence(content))
+  } catch {
+    return undefined
+  }
+}
+
+/** Clamps a model-proposed weight into the app's 1–5 range. */
+function clampWeight(value: unknown): number {
+  const numeric = typeof value === 'number' ? value : Number(value)
+  if (!Number.isFinite(numeric)) return AI_SUGGESTED_WEIGHT
+  return Math.min(5, Math.max(1, Math.round(numeric)))
 }
 
 /** Accepts raw JSON, fenced JSON, or a plain numbered list as a fallback. */
 export function parseItems(content: string): string[] {
-  const trimmed = content.trim().replace(/^```(?:json)?/i, '').replace(/```$/, '').trim()
-
-  try {
-    const parsed: unknown = JSON.parse(trimmed)
-    if (
-      typeof parsed === 'object' &&
-      parsed !== null &&
-      Array.isArray((parsed as { items?: unknown }).items)
-    ) {
-      return ((parsed as { items: unknown[] }).items)
-        .filter((item): item is string => typeof item === 'string')
-        .map((item) => item.trim())
-        .filter(Boolean)
-    }
-  } catch {
-    // fall through to line parsing
+  const parsed = tryParseJson(content)
+  if (isRecord(parsed) && Array.isArray(parsed.items)) {
+    return parsed.items
+      .filter((item): item is string => typeof item === 'string')
+      .map((item) => item.trim())
+      .filter(Boolean)
   }
 
-  return trimmed
+  return unfence(content)
     .split('\n')
     .map((line) => line.replace(/^\s*(?:[-*•]|\d+[.)])\s*/, '').trim())
     .filter(Boolean)
+}
+
+/**
+ * Structured criteria from a `criteria-suggestions` response, so the panel can
+ * offer to add them. Deliberately forgiving: models drift, and a reply that is
+ * only prose must degrade to "nothing to apply" rather than an error. Accepts
+ * either a `{criteria: [...]}` array of objects/strings or a bare array.
+ */
+export function parseCriteria(content: string): AiCriterionSuggestion[] {
+  const parsed = tryParseJson(content)
+  const raw = Array.isArray(parsed)
+    ? parsed
+    : isRecord(parsed) && Array.isArray(parsed.criteria)
+      ? parsed.criteria
+      : null
+  if (!raw) return []
+
+  const seen = new Set<string>()
+  const suggestions: AiCriterionSuggestion[] = []
+  for (const entry of raw) {
+    const label =
+      typeof entry === 'string'
+        ? entry
+        : isRecord(entry)
+          ? typeof entry.label === 'string'
+            ? entry.label
+            : typeof entry.name === 'string'
+              ? entry.name
+              : ''
+          : ''
+    const trimmed = label.trim()
+    const key = trimmed.toLowerCase()
+    if (trimmed === '' || seen.has(key)) continue
+    seen.add(key)
+    suggestions.push({
+      label: trimmed,
+      weight: isRecord(entry) ? clampWeight(entry.weight) : AI_SUGGESTED_WEIGHT,
+    })
+  }
+
+  return suggestions.slice(0, 6)
 }

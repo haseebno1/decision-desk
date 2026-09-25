@@ -19,11 +19,27 @@ export interface AiAssistRequest {
   context: AiDecisionContext
 }
 
+export interface AiCriterionSuggestion {
+  label: string
+  /** 1–5. Providers may propose a weight; the UI clamps it before applying. */
+  weight: number
+}
+
+/** Weight used when a provider suggests a criterion without one. */
+export const AI_SUGGESTED_WEIGHT = 3
+
 export interface AiAssistResult {
   /** Short human-readable header for the response block. */
   heading: string
   /** Content lines, already trimmed and de-duplicated. */
   items: string[]
+  /**
+   * Structured output for `criteria-suggestions`, so the UI can *add* the
+   * suggestions to the decision rather than only displaying them. Optional —
+   * a provider that cannot produce structure simply omits it, and the panel
+   * falls back to showing the prose lines.
+   */
+  suggestedCriteria?: AiCriterionSuggestion[]
 }
 
 export interface AiProvider {
