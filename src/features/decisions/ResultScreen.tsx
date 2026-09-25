@@ -8,6 +8,7 @@ import {
 } from '@/lib/recommendation'
 import { formatTotal } from '@/lib/scoring'
 import { useDecisions } from './decisionStore'
+import { OutcomeReviewSection } from './OutcomeReviewSection'
 import type { Decision, DecisionOption } from '@/types/decision'
 
 interface ResultScreenProps {
@@ -150,11 +151,15 @@ export function ResultScreen({ decision, onBack }: ResultScreenProps) {
       </section>
 
       {outcome ? (
-        <p className="rounded-xl border border-slate-800 bg-slate-900/60 p-4 text-sm text-slate-400">
-          This decision is committed to <strong className="text-slate-200">{chosenOption?.label ?? 'an option'}</strong>.
-          {outcome.chosenOptionId !== winner.id &&
-            ' Note: scores changed after commit — this is no longer the current mathematical leader.'}
-        </p>
+        <>
+          <p className="rounded-xl border border-slate-800 bg-slate-900/60 p-4 text-sm text-slate-400">
+            This decision is committed to{' '}
+            <strong className="text-slate-200">{chosenOption?.label ?? 'an option'}</strong>.
+            {outcome.chosenOptionId !== winner.id &&
+              ' Note: scores changed after commit — this is no longer the current mathematical leader.'}
+          </p>
+          <OutcomeReviewSection decision={decision} />
+        </>
       ) : confirming ? (
         <div className="flex flex-col gap-3 rounded-xl border border-amber-500/40 bg-amber-500/5 p-4">
           <p className="text-sm text-amber-200">

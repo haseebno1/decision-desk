@@ -180,8 +180,12 @@ function TimelineCard({
       <div className="min-w-0">
         <h3 className="truncate font-medium text-slate-100">{decision.title}</h3>
         <p className="mt-0.5 text-sm text-slate-500">
-          {decision.status === 'committed' ? 'Decided' : 'Draft'} ·{' '}
-          {CATEGORY_LABELS[decision.category]}
+          {decision.status === 'committed'
+            ? decision.outcome?.review
+              ? 'Reviewed'
+              : 'Decided'
+            : 'Draft'}{' '}
+          · {CATEGORY_LABELS[decision.category]}
           {committedLabel !== null ? ` · chose “${committedLabel}”` : null}
           {committedLabel === null && leader !== null
             ? ` · leading: ${leader} (${formatTotal(summary.ranked[0].total)}/10)`

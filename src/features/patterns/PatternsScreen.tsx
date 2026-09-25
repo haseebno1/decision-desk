@@ -63,6 +63,19 @@ export function PatternsScreen() {
         />
       </div>
 
+      {report.reviewedCount > 0 && (
+        <div className="grid grid-cols-2 gap-3">
+          <StatCard
+            label="Avg satisfaction"
+            value={`${report.averageSatisfaction!.toFixed(1)}/5`}
+          />
+          <StatCard
+            label="Would redo same way"
+            value={`${Math.round(report.wouldChooseAgainRate! * 100)}%`}
+          />
+        </div>
+      )}
+
       <section aria-labelledby="categories-heading" className="flex flex-col gap-3">
         <h2 id="categories-heading" className="text-lg font-semibold text-slate-100">
           By category

@@ -27,6 +27,12 @@ export interface PatternsReport {
   overriddenCount: number
   /** Committed decisions where the final gap was under the close-call threshold. */
   closeCallCount: number
+  /** Reviews recorded (Phase 6). */
+  reviewedCount: number
+  /** Average satisfaction across reviews, 1–5. */
+  averageSatisfaction: number | null
+  /** Share of reviewed decisions the user would redo the same way, 0–1. */
+  wouldChooseAgainRate: number | null
   categories: CategoryBreakdown[]
   stakes: StakeBreakdown[]
   criteria: CriterionUsage[]
@@ -115,6 +121,20 @@ export function buildPatternsReport(decisions: Decision[]): PatternsReport {
     .filter((days) => days >= 0 && Number.isFinite(days))
   const averageDecisionSpanDays =
     spans.length > 0 ? spans.reduce((sum, s) => sum + s, 0) / spans.length : null
+
+  // ---- Outcome reviews (Phase 6) ------------------------------------------
+  const reviews = committed
+    .map((d) => d.outcome?.review)
+    .filter((r) => r !== undefined)
+  const reviewedCount = reviews.length
+  const averageSatisfaction =
+    reviewedCount > 0
+      ? reviews.reduce((sum, r) => sum + r.satisfaction, 0) / reviewedCount
+      : null
+  const wouldChooseAgainRate =
+    reviewedCount > 0
+      ? reviews.filter((r) => r.wouldChooseAgain).length / reviewedCount
+      : null
 
   // ---- Category / stake breakdowns ----------------------------------------
   const countBy = <K extends string>(keys: Array<K>, pick: (d: Decision) => K) => {
@@ -221,6 +241,13 @@ export function buildPatternsReport(decisions: Decision[]): PatternsReport {
     }
   }
 
+  if (reviewedCount > 0) {
+    const pct = Math.round(wouldChooseAgainRate! * 100)
+    insights.push(
+      `Across ${reviewedCount} reviewed decision${reviewedCount === 1 ? '' : 's'}, satisfaction averages ${averageSatisfaction!.toFixed(1)}/5 and you'd redo ${pct}% the same way.`,
+    )
+  }
+
   return {
     total: decisions.length,
     drafts: drafts.length,
@@ -229,6 +256,9 @@ export function buildPatternsReport(decisions: Decision[]): PatternsReport {
     averageDecisionSpanDays,
     overriddenCount,
     closeCallCount,
+    reviewedCount,
+    averageSatisfaction,
+    wouldChooseAgainRate,
     categories,
     stakes,
     criteria,

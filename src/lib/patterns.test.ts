@@ -148,6 +148,52 @@ describe('buildPatternsReport', () => {
 
     expect(report.insights).toEqual([])
   })
+
+  it('aggregates outcome reviews into satisfaction and redo rate', () => {
+    const withReviews = [
+      scoredLaptopDecision({ status: 'committed' }),
+      scoredLaptopDecision({
+        title: 'Second committed',
+        status: 'committed',
+        options: OPTIONS.map((o) => ({ ...o })),
+      }),
+    ]
+    withReviews[0].outcome = {
+      chosenOptionId: 'opt-a',
+      committedAt: '2026-09-26T10:00:00.000Z',
+      review: {
+        actualOptionId: 'opt-a',
+        satisfaction: 5,
+        wouldChooseAgain: true,
+        reviewedAt: '2026-10-01T10:00:00.000Z',
+      },
+    }
+    withReviews[1].outcome = {
+      chosenOptionId: 'opt-a',
+      committedAt: '2026-09-26T10:00:00.000Z',
+      review: {
+        actualOptionId: 'opt-b', // diverged
+        satisfaction: 2,
+        wouldChooseAgain: false,
+        reviewedAt: '2026-10-02T10:00:00.000Z',
+      },
+    }
+
+    const report = buildPatternsReport(withReviews)
+
+    expect(report.reviewedCount).toBe(2)
+    expect(report.averageSatisfaction).toBeCloseTo(3.5, 5)
+    expect(report.wouldChooseAgainRate).toBeCloseTo(0.5, 5)
+    expect(report.insights.join(' ')).toMatch(/satisfaction averages 3\.5\/5 and you'd redo 50%/)
+  })
+
+  it('leaves review stats null when nothing is reviewed', () => {
+    const report = buildPatternsReport([scoredLaptopDecision({ status: 'committed' })])
+
+    expect(report.reviewedCount).toBe(0)
+    expect(report.averageSatisfaction).toBeNull()
+    expect(report.wouldChooseAgainRate).toBeNull()
+  })
 })
 
 describe('averageOptionsPerDecision', () => {

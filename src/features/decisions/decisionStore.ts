@@ -1,5 +1,5 @@
 import { createContext, useContext } from 'react'
-import type { Decision } from '@/types/decision'
+import type { Decision, OutcomeReview } from '@/types/decision'
 
 export interface DecisionStore {
   decisions: Decision[]
@@ -16,6 +16,8 @@ export interface DecisionStore {
   deleteDecision: (id: string) => void
   /** Lock a decision at its current recommendation. */
   commitDecision: (id: string, chosenOptionId: string) => void
+  /** Attach or replace the retrospective on a committed decision. */
+  reviewOutcome: (id: string, review: Omit<OutcomeReview, 'reviewedAt'>) => void
 }
 
 export const DecisionStoreContext = createContext<DecisionStore | null>(null)

@@ -56,6 +56,24 @@ export function DecisionStoreProvider({ children }: { children: ReactNode }) {
     [],
   )
 
+  const reviewOutcome = useCallback<DecisionStore['reviewOutcome']>(
+    (id, review) => {
+      const now = new Date().toISOString()
+      setDecisions((prev) =>
+        prev.map((d) =>
+          d.id === id && d.outcome
+            ? {
+                ...d,
+                outcome: { ...d.outcome, review: { ...review, reviewedAt: now } },
+                updatedAt: now,
+              }
+            : d,
+        ),
+      )
+    },
+    [],
+  )
+
   const value = useMemo(
     () => ({
       decisions,
@@ -63,8 +81,9 @@ export function DecisionStoreProvider({ children }: { children: ReactNode }) {
       updateDecision,
       deleteDecision,
       commitDecision,
+      reviewOutcome,
     }),
-    [decisions, createDecision, updateDecision, deleteDecision, commitDecision],
+    [decisions, createDecision, updateDecision, deleteDecision, commitDecision, reviewOutcome],
   )
 
   return (

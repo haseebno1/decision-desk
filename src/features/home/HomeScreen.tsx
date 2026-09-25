@@ -95,7 +95,11 @@ function DecisionCard({
                 : 'mr-1.5 rounded-full bg-slate-700/50 px-2 py-0.5 text-xs font-medium text-slate-400'
             }
           >
-            {decision.status === 'committed' ? 'Decided' : 'Draft'}
+            {decision.status === 'committed'
+              ? decision.outcome?.review
+                ? 'Reviewed'
+                : 'Decided'
+              : 'Draft'}
           </span>
           {CATEGORY_LABELS[decision.category]} · Stake:{' '}
           {STAKE_LABELS[decision.stake].toLowerCase()} · {decision.options.length}{' '}

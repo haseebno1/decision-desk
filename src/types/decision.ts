@@ -80,4 +80,23 @@ export interface Decision {
 export interface DecisionOutcome {
   chosenOptionId: string
   committedAt: string
+  /** Filled in later via outcome review (Phase 6). */
+  review?: OutcomeReview
 }
+
+/**
+ * Retrospective recorded after living with the decision.
+ * The committed option is the "expected" outcome; `actualOptionId` may differ.
+ */
+export interface OutcomeReview {
+  /** What actually happened — may diverge from the committed option. */
+  actualOptionId?: string
+  /** 1 (poor) – 5 (excellent). */
+  satisfaction: number
+  wouldChooseAgain: boolean
+  notes?: string
+  reviewedAt: string
+}
+
+export const SATISFACTION_MIN = 1
+export const SATISFACTION_MAX = 5
