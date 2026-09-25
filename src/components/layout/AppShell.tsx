@@ -177,7 +177,7 @@ export function AppShell({ navItems, activeRoute, onNavigate, mainRef, children 
           <button
             type="button"
             onClick={() => onNavigate('new-decision')}
-            className="inline-flex cursor-pointer items-center gap-1.5 rounded-lg bg-accent px-3.5 py-2 text-sm font-semibold text-white shadow-[0_0_24px_rgba(139,92,246,0.25)] transition-[background-color,box-shadow] duration-150 hover:bg-[#7c4ee8] hover:shadow-[0_0_32px_rgba(139,92,246,0.4)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"
+            className="inline-flex cursor-pointer items-center gap-1.5 rounded-lg bg-accent px-3.5 py-2 text-sm font-semibold text-white shadow-[0_0_24px_rgba(124,78,232,0.28)] transition-[background-color,box-shadow] duration-150 hover:bg-[#8b5cf6] hover:shadow-[0_0_32px_rgba(124,78,232,0.45)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"
           >
             <NavGlyph icon="plus" className="h-4 w-4" />
             New decision

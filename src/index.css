@@ -5,6 +5,10 @@
  * 2842323800619420280). Depth comes from luminous surface layering and
  * hairline borders, not heavy shadows. A single violet accent marks
  * momentum: recommendations, primary actions, active states.
+ *
+ * Contrast: every text/background pairing in this file clears WCAG AA
+ * (4.5:1 body, 3:1 for the non-text accent marks). Ratios are recorded in
+ * docs/UI-IMPROVEMENTS.md; keep them true when editing values.
  */
 @theme {
   --font-sans:
@@ -22,17 +26,18 @@
   --color-surface-high: #211b30; /* hover layer / accent tint */
   --color-surface-top: #292532; /* pressed / strongest fill */
 
-  /* Typographic cast. */
-  --color-ink: #f5f3fa; /* primary text */
-  --color-ink-soft: #8f899b; /* secondary text */
-  --color-ink-faint: #5b5568; /* hairline-level text */
+  /* Typographic cast — tuned so muted text clears WCAG AA (4.5:1) on every
+     surface tier, including the strongest fills. */
+  --color-ink: #f5f3fa; /* primary text — 15.4:1 on surface */
+  --color-ink-soft: #a8a2b6; /* secondary text — 6.1:1 worst case */
+  --color-ink-faint: #96909f; /* meta text — 4.8:1 worst case */
 
   /* Boundary + momentum. */
-  --color-hairline: #292532;
-  --color-hairline-strong: #3b3548;
-  --color-accent: #8b5cf6; /* electric violet */
-  --color-accent-soft: rgba(139, 92, 246, 0.16); /* halo wash */
-  --color-accent-text: #b69df8; /* accessible accent-on-dark text */
+  --color-hairline: #3a3446; /* 1.6:1 on surface — visible without wireframing */
+  --color-hairline-strong: #4a4359;
+  --color-accent: #7c4ee8; /* electric violet — white text sits at 5.1:1 */
+  --color-accent-soft: rgba(124, 78, 232, 0.18); /* halo wash */
+  --color-accent-text: #c4b0fb; /* accent-on-dark text — 9.9:1 on surface */
 
   --color-danger: #f27c8a;
 

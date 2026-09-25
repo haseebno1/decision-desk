@@ -7,7 +7,7 @@ const SHARED =
 
 const VARIANTS = {
   primary:
-    'bg-accent text-white shadow-[0_0_24px_rgba(139,92,246,0.25)] hover:shadow-[0_0_32px_rgba(139,92,246,0.4)] hover:bg-[#7c4ee8]',
+    'bg-accent text-white shadow-[0_0_24px_rgba(124,78,232,0.28)] hover:shadow-[0_0_32px_rgba(124,78,232,0.45)] hover:bg-[#8b5cf6]',
   secondary:
     'border border-hairline bg-surface-mid text-ink hover:bg-surface-high hover:border-hairline-strong',
   ghost: 'text-ink-soft hover:bg-surface-high hover:text-ink',
