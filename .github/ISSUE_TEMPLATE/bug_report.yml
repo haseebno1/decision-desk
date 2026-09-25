@@ -1,0 +1,81 @@
+name: Bug report
+description: Something in the app behaves incorrectly
+title: '[Bug]: '
+labels: ['bug']
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for taking the time to report this. Please search the existing
+        issues first — a duplicate is easy to close, but a silent bug is not.
+
+        **Do not paste API keys, or the personal content of your own
+        decisions.** All data stays in your browser, so a bug usually
+        reproduces from the steps alone.
+
+  - type: textarea
+    id: what-happened
+    attributes:
+      label: What happened?
+      description: What did you expect to happen, and what happened instead?
+      placeholder: |
+        Expected: the close-call badge to appear when the gap is under 0.5.
+        Actual: no badge, even though the gap reads 0.2.
+    validations:
+      required: true
+
+  - type: textarea
+    id: steps
+    attributes:
+      label: Steps to reproduce
+      description: The smallest sequence that shows the problem. Screenshots or a short recording help a lot for visual issues.
+      placeholder: |
+        1. Create a decision with two options and one criterion
+        2. Score them 4 and 4
+        3. Open the result screen
+    validations:
+      required: true
+
+  - type: dropdown
+    id: area
+    attributes:
+      label: Which part of the app?
+      multiple: true
+      options:
+        - Home
+        - Define a decision (options, criteria, stakes)
+        - Compare / scoring
+        - Result / recommendation
+        - Outcome review
+        - History journal
+        - Patterns
+        - AI assist panel
+        - Theme (dark / light) or sidebar
+        - Other / not sure
+    validations:
+      required: true
+
+  - type: input
+    id: environment
+    attributes:
+      label: Browser and operating system
+      placeholder: e.g. Chrome 141 on macOS 15, Safari on iOS 18
+    validations:
+      required: true
+
+  - type: textarea
+    id: console
+    attributes:
+      label: Console errors or screenshots
+      description: Anything logged in the browser console, plus a screenshot if the problem is visual. Optional but very useful.
+      render: shell
+
+  - type: checkboxes
+    id: confirmations
+    attributes:
+      label: Before submitting
+      options:
+        - label: I searched the existing issues and this is not a duplicate
+          required: true
+        - label: This report contains no API key and no private decision content
+          required: true

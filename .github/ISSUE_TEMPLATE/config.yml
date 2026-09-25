@@ -1,0 +1,10 @@
+# Issues start from a template so reports arrive with the detail needed to act
+# on them.
+blank_issues_enabled: false
+contact_links:
+  - name: Report a security vulnerability
+    url: https://github.com/haseebno1/decision-desk/security/advisories/new
+    about: Please report vulnerabilities privately instead of opening a public issue — see SECURITY.md.
+  - name: Read the contributing guide first
+    url: https://github.com/haseebno1/decision-desk/blob/main/CONTRIBUTING.md
+    about: How to run the project, the conventions to follow, and what a reviewable pull request looks like.

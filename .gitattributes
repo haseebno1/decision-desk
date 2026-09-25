@@ -1,0 +1,24 @@
+# Normalise line endings in the repository; Git decides per platform on checkout.
+* text=auto eol=lf
+
+# Binary assets — never diff or convert these.
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.gif binary
+*.webp binary
+*.ico binary
+*.woff binary
+*.woff2 binary
+
+# Collapse generated files in the repository's language statistics. Diffs are
+# deliberately left visible: lockfile changes should be reviewable.
+package-lock.json linguist-generated=true
+dist/** linguist-generated=true
+
+# Design references (exported Stitch HTML) are inputs, not source code.
+stitch/html/** linguist-documentation=true
+stitch/screenshots/** linguist-documentation=true
+
+# Keep language statistics focused on the app itself.
+docs/** linguist-documentation=true

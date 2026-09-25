@@ -1,0 +1,72 @@
+name: Feature request
+description: Suggest an improvement or a new capability
+title: '[Feature]: '
+labels: ['enhancement']
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Decision Desk deliberately favours a small, finished surface over many
+        half-built ones, so please lead with the problem rather than the
+        implementation — it is much easier to agree on the problem.
+
+        Worth a look first: `docs/FEATURES.md` (what exists and what is
+        planned), `docs/UI-IMPROVEMENTS.md` (the current improvement plan) and
+        `docs/PRD.md` (non-goals such as accounts, cloud sync and sharing).
+
+  - type: textarea
+    id: problem
+    attributes:
+      label: What problem does this solve?
+      description: Describe the situation you are in and what is awkward or impossible today.
+      placeholder: |
+        When I am comparing options I keep losing track of which score I already
+        adjusted, so I re-check cells I have already done.
+    validations:
+      required: true
+
+  - type: textarea
+    id: proposal
+    attributes:
+      label: What would you like to happen?
+      description: Your proposed solution. If you have alternatives, list them — a rough sketch is fine.
+    validations:
+      required: true
+
+  - type: dropdown
+    id: area
+    attributes:
+      label: Which part of the app?
+      multiple: true
+      options:
+        - Home
+        - Define a decision (options, criteria, stakes)
+        - Compare / scoring
+        - Result / recommendation
+        - Outcome review
+        - History journal
+        - Patterns
+        - AI assist panel
+        - Theme (dark / light) or sidebar
+        - Documentation / developer experience
+        - Other / not sure
+    validations:
+      required: true
+
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Alternatives you considered
+      description: Including any workaround you use today, or an existing tool that does this well.
+
+  - type: checkboxes
+    id: confirmations
+    attributes:
+      label: Before submitting
+      options:
+        - label: I searched the existing issues and this is not a duplicate
+          required: true
+        - label: I have checked this is not already covered by docs/PRD.md non-goals
+          required: true
+        - label: I am willing to help implement this (optional)
+          required: false

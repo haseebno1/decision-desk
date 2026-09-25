@@ -1,8 +1,35 @@
 {
   "name": "decision-desk",
-  "private": true,
   "version": "0.1.0",
+  "private": true,
+  "description": "A local-first decision tool: weigh criteria against options, get a transparent recommendation, and learn from how it turned out.",
+  "license": "MIT",
+  "author": {
+    "name": "Abdul Haseeb",
+    "url": "https://github.com/haseebno1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/haseebno1/decision-desk.git"
+  },
+  "homepage": "https://github.com/haseebno1/decision-desk#readme",
+  "bugs": {
+    "url": "https://github.com/haseebno1/decision-desk/issues"
+  },
+  "keywords": [
+    "decision-making",
+    "local-first",
+    "react",
+    "typescript",
+    "vite",
+    "tailwindcss",
+    "local-first",
+    "decision-journal"
+  ],
   "type": "module",
+  "engines": {
+    "node": ">=20.19.0"
+  },
   "scripts": {
     "dev": "vite",
     "build": "tsc -b && vite build",
@@ -11,7 +38,8 @@
     "test": "vitest run",
     "test:watch": "vitest",
     "check": "npm run lint && npm run typecheck && npm test",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "seed:demo": "node scripts/seed-demo-data.mjs --console"
   },
   "dependencies": {
     "react": "^19.3.0",
