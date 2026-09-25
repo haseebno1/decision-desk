@@ -22,11 +22,14 @@ export function OptionEditor({ options, onChange }: OptionEditorProps) {
   }
 
   return (
-    <div className="flex flex-col gap-2">
+    <div className="flex flex-col gap-2.5">
       {options.map((option, index) => (
-        <div key={option.id} className="flex items-center gap-2">
-          <span className="w-6 text-center text-xs font-medium text-slate-500">
-            {index + 1}
+        <div key={option.id} className="flex items-center gap-2.5">
+          <span
+            aria-hidden
+            className="flex h-7 w-7 shrink-0 items-center justify-center rounded-md bg-surface-high font-mono text-[11px] font-semibold text-accent-text"
+          >
+            {String.fromCharCode(65 + index)}
           </span>
           <TextInput
             value={option.label}
@@ -39,14 +42,19 @@ export function OptionEditor({ options, onChange }: OptionEditorProps) {
             aria-label={`Remove option ${index + 1}`}
             disabled={options.length <= 2}
             onClick={() => removeOption(option.id)}
+            className="px-2.5"
           >
             ✕
           </Button>
         </div>
       ))}
-      <div>
-        <Button variant="secondary" onClick={addOption}>
-          + Add option
+      <div className="pt-1">
+        <Button
+          variant="secondary"
+          onClick={addOption}
+          className="w-full border-dashed py-2.5 sm:w-auto"
+        >
+          <span aria-hidden className="text-accent-text">+</span> Add option
         </Button>
       </div>
     </div>

@@ -2,7 +2,7 @@ import { useMemo } from 'react'
 import { DecisionForm } from './DecisionForm'
 import { CriteriaEditor } from './CriteriaEditor'
 import { ScoreMatrix } from './ScoreMatrix'
-import { Button } from '@/components/ui/Button'
+import { Button, SectionLabel } from '@/components/ui/Button'
 import { AiAssistPanel } from './AiAssistPanel'
 import { useDecisions } from './decisionStore'
 import { pruneScores, summarizeScoring } from '@/lib/scoring'
@@ -51,16 +51,22 @@ export function DecisionWorkspace({
   }
 
   return (
-    <div className="flex flex-col gap-10">
+    <div className="flex flex-col gap-12">
       <DecisionForm decision={decision} onSaved={onSaved} onCancel={onCancel} />
 
-      <section aria-labelledby="criteria-heading" className="flex flex-col gap-4">
-        <div>
-          <h2 id="criteria-heading" className="text-xl font-semibold text-slate-100">
-            Criteria &amp; weights
+      {/* Step 02 — Priority calibration */}
+      <section aria-labelledby="criteria-heading" className="flex flex-col gap-5">
+        <div className="flex flex-col gap-1 border-t border-hairline pt-8">
+          <div className="flex items-center justify-between">
+            <SectionLabel tone="accent">Step 02 · Weigh priorities</SectionLabel>
+            <span className="font-mono text-[11px] text-ink-faint">02 / 03</span>
+          </div>
+          <h2 id="criteria-heading" className="text-2xl font-semibold tracking-tight text-ink">
+            What matters most?
           </h2>
-          <p className="text-sm text-slate-500">
-            What matters in this decision, and how much. Weights run 1 (barely) to 5 (heavily).
+          <p className="max-w-lg text-sm text-ink-soft">
+            Not everything deserves equal weight. Weights run 1 (barely) to 5
+            (heavily) and drive the final recommendation.
           </p>
         </div>
         <CriteriaEditor
@@ -71,32 +77,47 @@ export function DecisionWorkspace({
 
       <AiAssistPanel decision={decision} />
 
-      <section aria-labelledby="scores-heading" className="flex flex-col gap-4">
-        <div className="flex items-baseline justify-between gap-4">
-          <div>
-            <h2 id="scores-heading" className="text-xl font-semibold text-slate-100">
-              Score matrix
+      {/* Step 03 — Weighted scoring matrix */}
+      <section aria-labelledby="scores-heading" className="flex flex-col gap-5">
+        <div className="flex flex-col gap-1 border-t border-hairline pt-8">
+          <div className="flex flex-wrap items-center justify-between gap-2">
+            <SectionLabel tone="accent">Step 03 · Compare options</SectionLabel>
+            <span className="font-mono text-[11px] text-ink-faint">03 / 03</span>
+          </div>
+          <div className="flex flex-wrap items-end justify-between gap-3">
+            <h2 id="scores-heading" className="text-2xl font-semibold tracking-tight text-ink">
+              The weighted matrix
             </h2>
-            <p className="text-sm text-slate-500">
-              Rate each option 1–5 per criterion. Totals are weighted and update live.
+            <p
+              className="font-mono text-[11px] text-ink-soft"
+              aria-live="polite"
+            >
+              {summary.scoredCells}/{summary.totalCells} scored
+              {summary.complete && summary.totalCells > 0 && (
+                <span className="ml-1 text-accent-text">✓ complete</span>
+              )}
             </p>
           </div>
-          <p className="shrink-0 text-sm text-slate-500" aria-live="polite">
-            {summary.scoredCells}/{summary.totalCells} scored
-            {summary.complete && summary.totalCells > 0 && ' ✓'}
+          <p className="max-w-lg text-sm text-ink-soft">
+            Rate each option 1–5 per criterion. Totals are weighted and update live.
           </p>
         </div>
-        <ScoreMatrix
-          options={decision.options}
-          criteria={decision.criteria}
-          scores={decision.scores ?? {}}
-          summary={summary}
-          onScoreChange={handleScoreChange}
-        />
+        <div className="rounded-xl border border-hairline bg-surface p-3 md:p-4">
+          <ScoreMatrix
+            options={decision.options}
+            criteria={decision.criteria}
+            scores={decision.scores ?? {}}
+            summary={summary}
+            onScoreChange={handleScoreChange}
+          />
+        </div>
       </section>
 
-      <section className="flex justify-end border-t border-slate-800 pt-6">
-        <Button onClick={onSaved}>See recommendation →</Button>
+      {/* Flow navigation deck */}
+      <section className="flex justify-end border-t border-hairline pt-6">
+        <Button onClick={onSaved} className="h-11 px-5">
+          See recommendation →
+        </Button>
       </section>
     </div>
   )

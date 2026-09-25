@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { Button } from '@/components/ui/Button'
+import { Button, SectionLabel } from '@/components/ui/Button'
 import { Field } from '@/components/ui/Field'
 import { Select, TextInput } from '@/components/ui/inputs'
 import {
@@ -71,14 +71,15 @@ export function AiAssistPanel({ decision }: { decision: Decision }) {
   }
 
   return (
-    <section aria-labelledby="ai-heading" className="flex flex-col gap-4">
-      <div className="flex items-baseline justify-between gap-4">
-        <div>
-          <h2 id="ai-heading" className="text-lg font-semibold text-slate-100">
+    <section aria-labelledby="ai-heading" className="flex flex-col gap-4 border-t border-hairline pt-8">
+      <div className="flex flex-wrap items-end justify-between gap-3">
+        <div className="flex flex-col gap-1">
+          <SectionLabel>Optional assist</SectionLabel>
+          <h2 id="ai-heading" className="text-xl font-semibold tracking-tight text-ink">
             AI assist
           </h2>
-          <p className="text-sm text-slate-500">
-            Optional. Currently using {provider.label}.
+          <p className="text-sm text-ink-soft">
+            Currently using {provider.label}. Everything works without it.
           </p>
         </div>
         <Button variant="ghost" onClick={() => setShowSettings((s) => !s)}>
@@ -87,7 +88,7 @@ export function AiAssistPanel({ decision }: { decision: Decision }) {
       </div>
 
       {showSettings && (
-        <div className="flex max-w-xl flex-col gap-4 rounded-xl border border-slate-800 bg-slate-900/40 p-4">
+        <div className="flex flex-col gap-4 rounded-xl border border-hairline bg-surface-low p-4 md:p-5">
           <Field label="Provider" htmlFor="ai-provider">
             <Select
               id="ai-provider"
@@ -153,25 +154,28 @@ export function AiAssistPanel({ decision }: { decision: Decision }) {
           </Button>
         ))}
         {loading !== null && (
-          <span role="status" className="text-xs text-slate-500">
+          <span role="status" className="font-mono text-[11px] text-ink-soft">
             The mock provider thinks for ~0.5s by design.
           </span>
         )}
       </div>
 
       {error && (
-        <p role="alert" className="rounded-xl border border-rose-500/40 bg-rose-500/5 p-3 text-sm text-rose-300">
+        <p
+          role="alert"
+          className="rounded-xl border border-danger/40 bg-danger/5 p-3.5 text-sm text-danger"
+        >
           {error}
         </p>
       )}
 
       {result && (
-        <div className="rounded-xl border border-slate-800 bg-slate-900/60 p-4">
-          <h3 className="text-sm font-semibold text-slate-100">{result.heading}</h3>
+        <div className="rounded-xl border border-hairline bg-surface p-4">
+          <h3 className="text-sm font-semibold text-ink">{result.heading}</h3>
           <ul className="mt-2 flex flex-col gap-1.5">
             {result.items.map((item) => (
-              <li key={item} className="flex gap-2 text-sm text-slate-300">
-                <span aria-hidden className="text-violet-400">◆</span>
+              <li key={item} className="flex gap-2 text-sm text-ink-soft">
+                <span aria-hidden className="text-accent-text">◆</span>
                 {item}
               </li>
             ))}

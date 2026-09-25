@@ -14,11 +14,11 @@ import { HistoryScreen } from '@/features/history/HistoryScreen'
 import { PatternsScreen } from '@/features/patterns/PatternsScreen'
 import { parseHash, serializeRoute, type Route } from '@/lib/routes'
 
-const NAV_ITEMS: ReadonlyArray<{ id: string; label: string }> = [
-  { id: 'home', label: 'Home' },
-  { id: 'new-decision', label: 'New decision' },
-  { id: 'history', label: 'History' },
-  { id: 'patterns', label: 'Patterns' },
+const NAV_ITEMS: ReadonlyArray<{ id: string; label: string; icon: 'home' | 'plus' | 'journal' | 'patterns' | 'settings' }> = [
+  { id: 'home', label: 'Home', icon: 'home' },
+  { id: 'new-decision', label: 'New decision', icon: 'plus' },
+  { id: 'history', label: 'History', icon: 'journal' },
+  { id: 'patterns', label: 'Patterns', icon: 'patterns' },
 ]
 
 /** Page titles per top-level route, set on navigation for screen-reader/UX context. */
@@ -165,10 +165,10 @@ export default function App() {
 function NotFound({ onBack }: { onBack: () => void }) {
   return (
     <div className="flex flex-col items-center gap-3 py-20 text-center">
-      <p className="text-sm font-medium tracking-widest text-slate-400 uppercase">
+      <p className="font-mono text-[11px] font-semibold tracking-[0.14em] text-ink-soft uppercase">
         Not found
       </p>
-      <p className="max-w-sm text-slate-500">
+      <p className="max-w-sm text-ink-soft">
         That decision doesn't exist (it may have been deleted).
       </p>
       <Button variant="secondary" onClick={onBack}>

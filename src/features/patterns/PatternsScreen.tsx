@@ -1,4 +1,5 @@
 import { useMemo } from 'react'
+import { SectionLabel } from '@/components/ui/Button'
 import { useDecisions } from '@/features/decisions/decisionStore'
 import {
   averageOptionsPerDecision,
@@ -7,6 +8,7 @@ import {
 } from '@/lib/patterns'
 import { formatTotal } from '@/lib/scoring'
 import { CATEGORY_LABELS, STAKE_LABELS } from '@/types/decision'
+import { EmptyState } from '@/components/ui/inputs'
 
 export function PatternsScreen() {
   const { decisions } = useDecisions()
@@ -19,26 +21,40 @@ export function PatternsScreen() {
 
   if (decisions.length === 0) {
     return (
-      <div className="flex flex-col items-center gap-2 rounded-xl border border-dashed border-slate-700 py-16 text-center">
-        <h1 className="text-xl font-semibold text-slate-100">No patterns yet</h1>
-        <p className="max-w-sm text-sm text-slate-500">
-          Capture a few decisions and this page will surface your habits: the
-          categories you revisit, the criteria you lean on, and how long you
-          sit on choices.
-        </p>
-      </div>
+      <EmptyState
+        title="No patterns yet"
+        icon={
+          <svg viewBox="0 0 20 20" fill="none" className="h-6 w-6" aria-hidden>
+            <circle cx="5" cy="14.5" r="1.8" stroke="currentColor" strokeWidth="1.4" />
+            <circle cx="10" cy="9" r="1.8" stroke="currentColor" strokeWidth="1.4" />
+            <circle cx="15" cy="4.5" r="1.8" stroke="currentColor" strokeWidth="1.4" />
+            <path
+              d="m6.4 13 2.2-2.5m1.9-1 2.6-2.7"
+              stroke="currentColor"
+              strokeWidth="1.3"
+              strokeLinecap="round"
+            />
+          </svg>
+        }
+      >
+        Capture a few decisions and this page will surface your habits: the
+        categories you revisit, the criteria you lean on, and how long you
+        sit on choices.
+      </EmptyState>
     )
   }
 
   return (
     <div className="flex flex-col gap-8">
       <header className="flex flex-col gap-1">
-        <h1 className="text-2xl font-bold tracking-tight text-slate-50">Patterns</h1>
-        <p className="text-sm text-slate-400">
+        <SectionLabel>Synthesis module</SectionLabel>
+        <h1 className="text-3xl font-semibold tracking-tight text-ink">Patterns</h1>
+        <p className="text-sm text-ink-soft">
           What {report.total} decision{report.total === 1 ? '' : 's'} say about how you decide.
         </p>
       </header>
 
+      {/* Metric trio — compact surface nodes. */}
       <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
         <StatCard label="Decisions" value={String(report.total)} />
         <StatCard
@@ -48,6 +64,7 @@ export function PatternsScreen() {
               ? `${formatTotal(report.averageWinnerScore)}/10`
               : '—'
           }
+          accent
         />
         <StatCard
           label="Avg options compared"
@@ -72,44 +89,39 @@ export function PatternsScreen() {
           <StatCard
             label="Would redo same way"
             value={`${Math.round(report.wouldChooseAgainRate! * 100)}%`}
+            accent
           />
         </div>
       )}
 
       <section aria-labelledby="categories-heading" className="flex flex-col gap-3">
-        <h2 id="categories-heading" className="text-lg font-semibold text-slate-100">
-          By category
-        </h2>
+        <SectionLabel>By category</SectionLabel>
         <BarList
           rows={report.categories.map((row) => ({
             key: row.category,
             label: CATEGORY_LABELS[row.category],
             count: row.count,
           }))}
-          barClass="bg-emerald-500/70"
+          barClass="bg-accent"
         />
       </section>
 
       <section aria-labelledby="stakes-heading" className="flex flex-col gap-3">
-        <h2 id="stakes-heading" className="text-lg font-semibold text-slate-100">
-          By stake
-        </h2>
+        <SectionLabel>By stake</SectionLabel>
         <BarList
           rows={report.stakes.map((row) => ({
             key: row.stake,
             label: STAKE_LABELS[row.stake],
             count: row.count,
           }))}
-          barClass="bg-sky-500/70"
+          barClass="bg-accent/50"
         />
       </section>
 
       <section aria-labelledby="criteria-heading" className="flex flex-col gap-3">
-        <h2 id="criteria-heading" className="text-lg font-semibold text-slate-100">
-          Most-used criteria
-        </h2>
+        <SectionLabel>Most-used criteria</SectionLabel>
         {report.criteria.length === 0 ? (
-          <p className="text-sm text-slate-500">
+          <p className="text-sm text-ink-soft">
             No named criteria yet — they'll appear as you weight decisions.
           </p>
         ) : (
@@ -119,24 +131,21 @@ export function PatternsScreen() {
               label: row.label,
               count: row.count,
             }))}
-            barClass="bg-violet-500/70"
+            barClass="bg-accent/70"
           />
         )}
       </section>
 
       {report.insights.length > 0 && (
         <section aria-labelledby="insights-heading" className="flex flex-col gap-3">
-          <h2 id="insights-heading" className="text-lg font-semibold text-slate-100">
-            Insights
-          </h2>
-          <ul className="flex flex-col gap-2">
+          <SectionLabel tone="accent">Something interesting</SectionLabel>
+          <ul className="flex flex-col gap-2.5">
             {report.insights.map((insight) => (
               <li
                 key={insight}
-                className="flex gap-2 rounded-xl border border-slate-800 bg-slate-900/60 p-3 text-sm text-slate-300"
+                className="rounded-xl border border-hairline bg-surface p-4"
               >
-                <span aria-hidden className="text-emerald-400">◆</span>
-                {insight}
+                <p className="text-[15px] leading-relaxed text-ink italic">“{insight}”</p>
               </li>
             ))}
           </ul>
@@ -146,13 +155,29 @@ export function PatternsScreen() {
   )
 }
 
-function StatCard({ label, value }: { label: string; value: string }) {
+function StatCard({
+  label,
+  value,
+  accent = false,
+}: {
+  label: string
+  value: string
+  accent?: boolean
+}) {
   return (
-    <div className="flex flex-col gap-1 rounded-xl border border-slate-800 bg-slate-900/60 p-4">
-      <span className="text-xs font-medium tracking-wide text-slate-500 uppercase">
+    <div className="flex flex-col gap-1 rounded-xl border border-hairline bg-surface p-4">
+      <span className="font-mono text-[10px] font-semibold tracking-[0.14em] text-ink-soft uppercase">
         {label}
       </span>
-      <span className="text-2xl font-bold tabular-nums text-slate-50">{value}</span>
+      <span
+        className={
+          accent
+            ? 'text-2xl font-semibold tabular-nums text-accent-text'
+            : 'text-2xl font-semibold tabular-nums text-ink'
+        }
+      >
+        {value}
+      </span>
     </div>
   )
 }
@@ -166,21 +191,21 @@ function BarList({
 }) {
   const max = Math.max(...rows.map((r) => r.count), 1)
   return (
-    <ul className="flex flex-col gap-2">
+    <ul className="flex flex-col gap-2.5">
       {rows.map((row) => (
         <li key={row.key} className="flex items-center gap-3 text-sm">
-          <span className="w-32 shrink-0 truncate text-slate-300">{row.label}</span>
+          <span className="w-32 shrink-0 truncate text-ink">{row.label}</span>
           <div
-            className="h-2.5 flex-1 overflow-hidden rounded-full bg-slate-800"
+            className="h-1.5 flex-1 overflow-hidden rounded-full bg-surface-high"
             role="img"
             aria-label={`${row.label}: ${row.count} decision${row.count === 1 ? '' : 's'}`}
           >
             <div
-              className={`h-full rounded-full ${barClass}`}
+              className={`h-full rounded-full transition-[width] duration-500 ${barClass}`}
               style={{ width: `${(row.count / max) * 100}%` }}
             />
           </div>
-          <span className="w-8 shrink-0 text-right tabular-nums text-slate-400">
+          <span className="w-8 shrink-0 text-right font-mono text-[11px] tabular-nums text-ink-soft">
             {row.count}
           </span>
         </li>

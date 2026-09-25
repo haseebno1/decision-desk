@@ -34,14 +34,14 @@ export function ScoreMatrix({
 
   if (options.length === 0 || criteria.length === 0) {
     return (
-      <p className="text-sm text-slate-500">
+      <p className="text-sm text-ink-soft">
         Add at least one option and one criterion to start scoring.
       </p>
     )
   }
 
   return (
-    <div className="overflow-x-auto">
+    <div className="overflow-x-auto pb-1">
       <table className="w-full min-w-max text-sm">
         <caption className="sr-only">
           Score each option from {SCORE_MIN} (poor) to {SCORE_MAX} (excellent)
@@ -49,30 +49,47 @@ export function ScoreMatrix({
         </caption>
         <thead>
           <tr>
-            <th scope="col" className="px-2 py-2 text-left font-medium text-slate-400">
+            <th scope="col" className="px-2 py-2 text-left font-mono text-[11px] font-semibold tracking-wider text-ink-soft uppercase">
               Criterion
             </th>
             {options.map((option) => (
               <th
                 key={option.id}
                 scope="col"
-                className="px-2 py-2 text-center font-medium text-slate-300"
+                className="px-2 py-2 text-center"
               >
-                {option.label.trim() !== '' ? option.label : 'Untitled option'}
+                <span className="flex items-center justify-center gap-1.5 font-medium text-ink">
+                  <span
+                    aria-hidden
+                    className={cn(
+                      'h-2 w-2 rounded-full',
+                      option.id === bestOptionId
+                        ? 'bg-accent shadow-[0_0_8px_rgba(139,92,246,0.8)]'
+                        : 'bg-ink-faint',
+                    )}
+                  />
+                  <span className="max-w-[140px] truncate">
+                    {option.label.trim() !== '' ? option.label : 'Untitled option'}
+                  </span>
+                </span>
               </th>
             ))}
           </tr>
         </thead>
         <tbody>
           {criteria.map((criterion) => (
-            <tr key={criterion.id} className="border-t border-slate-800">
-              <th scope="row" className="px-2 py-2 text-left font-normal text-slate-200">
-                {criterion.label.trim() !== '' ? (
-                  criterion.label
-                ) : (
-                  <span className="text-slate-500">Unnamed criterion</span>
-                )}
-                <span className="ml-1.5 text-xs text-slate-500">×{criterion.weight}</span>
+            <tr key={criterion.id} className="border-t border-hairline">
+              <th scope="row" className="px-2 py-2.5 text-left align-middle">
+                <span className="block text-sm font-medium text-ink">
+                  {criterion.label.trim() !== '' ? (
+                    criterion.label
+                  ) : (
+                    <span className="text-ink-soft">Unnamed criterion</span>
+                  )}
+                </span>
+                <span className="mt-0.5 inline-flex items-center gap-1 rounded bg-surface-high px-1.5 py-0.5 font-mono text-[10px] text-ink-soft">
+                  {criterion.weight}× weight
+                </span>
               </th>
               {options.map((option) => {
                 const value = scores[option.id]?.[criterion.id]
@@ -88,22 +105,29 @@ export function ScoreMatrix({
               })}
             </tr>
           ))}
-          <tr className="border-t-2 border-slate-700">
-            <th scope="row" className="px-2 py-2 text-left font-medium text-slate-200">
+          {/* Synthesis shelf — the Stitch total summary bar. */}
+          <tr className="border-t-2 border-hairline-strong">
+            <th
+              scope="row"
+              className="px-2 py-3 text-left font-mono text-[11px] font-semibold tracking-wider text-ink-soft uppercase"
+            >
               Weighted total
             </th>
             {options.map((option) => (
-              <td
-                key={option.id}
-                className={cn(
-                  'px-2 py-2 text-center font-semibold',
-                  option.id === bestOptionId
-                    ? 'text-emerald-400'
-                    : 'text-slate-100',
-                )}
-              >
-                {formatTotal(totalsByOption.get(option.id) ?? 0)}
-                {option.id === bestOptionId && ' ★'}
+              <td key={option.id} className="px-2 py-3 text-center">
+                <span
+                  className={cn(
+                    'inline-flex items-baseline gap-0.5 rounded-lg px-3 py-1.5 font-mono text-base font-semibold tabular-nums',
+                    option.id === bestOptionId
+                      ? 'bg-accent/15 text-accent-text'
+                      : 'bg-surface-high text-ink',
+                  )}
+                >
+                  {formatTotal(totalsByOption.get(option.id) ?? 0)}
+                  {option.id === bestOptionId && (
+                    <span aria-hidden className="text-xs">★</span>
+                  )}
+                </span>
               </td>
             ))}
           </tr>
@@ -134,8 +158,8 @@ function ScoreCell({
           className={cn(
             'h-7 w-7 cursor-pointer rounded-md text-xs transition-colors',
             value === score
-              ? 'bg-emerald-500 font-semibold text-emerald-950'
-              : 'bg-slate-800 text-slate-400 hover:bg-slate-700',
+              ? 'bg-accent font-semibold text-white shadow-[0_0_12px_rgba(139,92,246,0.3)]'
+              : 'bg-surface-high text-ink-soft hover:bg-surface-top hover:text-ink',
           )}
         >
           {score}

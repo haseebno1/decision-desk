@@ -5,19 +5,20 @@ interface FieldProps {
   htmlFor: string
   error?: string
   hint?: string
+  className?: string
   children: ReactNode
 }
 
-export function Field({ label, htmlFor, error, hint, children }: FieldProps) {
+export function Field({ label, htmlFor, error, hint, className = '', children }: FieldProps) {
   return (
-    <div className="flex flex-col gap-1.5">
-      <label htmlFor={htmlFor} className="text-sm font-medium text-slate-200">
+    <div className={`flex flex-col gap-1.5 ${className}`}>
+      <label htmlFor={htmlFor} className="text-sm font-medium text-ink">
         {label}
       </label>
       {children}
-      {hint && !error && <p className="text-xs text-slate-500">{hint}</p>}
+      {hint && !error && <p className="text-xs text-ink-soft">{hint}</p>}
       {error && (
-        <p role="alert" className="text-xs font-medium text-rose-400">
+        <p role="alert" className="text-xs font-medium text-danger">
           {error}
         </p>
       )}

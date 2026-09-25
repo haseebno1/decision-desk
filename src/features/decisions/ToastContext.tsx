@@ -42,12 +42,11 @@ export function ToastProvider({ children }: { children: ReactNode }) {
         aria-live="polite"
         className="pointer-events-none fixed inset-x-0 bottom-4 z-40 flex flex-col items-center gap-2 px-4"
       >
-        {toasts.map((toast) => (
-          <div
+        {toasts.map((toast) => (          <div
             key={toast.id}
-            className="animate-fade-up pointer-events-auto flex items-center gap-4 rounded-xl border border-slate-700 bg-slate-800 px-4 py-3 shadow-lg"
+            className="animate-fade-up pointer-events-auto flex items-center gap-4 rounded-xl border border-hairline bg-surface-low px-4 py-3 shadow-[0_20px_50px_rgba(0,0,0,0.65)] backdrop-blur"
           >
-            <p className="text-sm text-slate-100">{toast.message}</p>
+            <p className="text-sm text-ink">{toast.message}</p>
             {toast.actionLabel && toast.onAction && (
               <button
                 type="button"
@@ -55,7 +54,7 @@ export function ToastProvider({ children }: { children: ReactNode }) {
                   toast.onAction?.()
                   dismiss(toast.id)
                 }}
-                className="cursor-pointer text-sm font-semibold text-emerald-400 transition-colors hover:text-emerald-300"
+                className="cursor-pointer text-sm font-semibold text-accent-text transition-colors hover:text-ink"
               >
                 {toast.actionLabel}
               </button>
@@ -64,7 +63,7 @@ export function ToastProvider({ children }: { children: ReactNode }) {
               type="button"
               aria-label="Dismiss notification"
               onClick={() => dismiss(toast.id)}
-              className="cursor-pointer text-slate-500 transition-colors hover:text-slate-300"
+              className="cursor-pointer text-ink-faint transition-colors hover:text-ink"
             >
               ✕
             </button>

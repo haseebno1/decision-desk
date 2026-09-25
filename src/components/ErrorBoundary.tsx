@@ -38,18 +38,18 @@ export class ErrorBoundary extends Component<
 
     return (
       <div className="mx-auto flex min-h-dvh max-w-md flex-col items-center justify-center gap-4 px-4 text-center">
-        <h1 className="text-2xl font-bold text-slate-50">Something went wrong</h1>
-        <p className="text-sm text-slate-400">
+        <h1 className="text-2xl font-bold text-ink">Something went wrong</h1>
+        <p className="text-sm text-ink-soft">
           An unexpected error occurred. Your decisions are saved locally and
           reloading is safe.
         </p>
-        <pre className="max-h-32 max-w-full overflow-auto rounded-lg border border-slate-800 bg-slate-900 p-3 text-left text-xs text-slate-500">
+        <pre className="max-h-32 max-w-full overflow-auto rounded-lg border border-hairline bg-surface p-3 text-left text-xs text-ink-soft">
           {error.message}
         </pre>
         <button
           type="button"
           onClick={this.handleReload}
-          className="cursor-pointer rounded-lg bg-emerald-500 px-4 py-2 text-sm font-medium text-emerald-950 transition-colors hover:bg-emerald-400"
+          className="cursor-pointer rounded-lg bg-accent px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-[#7c4ee8]"
         >
           Reload the app
         </button>
