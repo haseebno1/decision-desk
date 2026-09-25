@@ -62,27 +62,30 @@ export function OutcomeReviewSection({ decision }: OutcomeReviewSectionProps) {
               <dt className="font-mono text-[10px] font-semibold tracking-[0.14em] text-ink-soft uppercase">
                 Actual
               </dt>
-              <dd
-                className={cn(
-                  'mt-1 text-sm font-medium',
-                  review.actualOptionId &&
-                    review.actualOptionId !== decision.outcome?.chosenOptionId
-                    ? 'text-amber-300'
-                    : 'text-ink',
-                )}
-              >
+              <dd className="mt-1 flex flex-wrap items-center gap-2 text-sm font-medium text-ink">
                 {review.actualOptionId
                   ? (actualOption?.label ?? 'Unknown option')
                   : 'Not recorded'}
+                {review.actualOptionId &&
+                  review.actualOptionId !== decision.outcome?.chosenOptionId && (
+                    <span className="rounded bg-surface-high px-1.5 py-0.5 font-mono text-[10px] text-ink-soft uppercase">
+                      Differs
+                    </span>
+                  )}
               </dd>
             </div>
           </dl>
 
           {review.actualOptionId &&
             review.actualOptionId !== decision.outcome?.chosenOptionId && (
-              <p className="rounded-xl border border-amber-500/40 bg-amber-500/5 p-3.5 text-sm text-amber-200">
-                You ended up with a different option than the math suggested —
-                worth remembering next time similar criteria show up.
+              <p className="flex items-start gap-2.5 rounded-xl border border-hairline bg-surface-high px-3.5 py-3 text-sm text-ink-soft">
+                <span aria-hidden className="shrink-0 text-ink">
+                  ⚖
+                </span>
+                <span>
+                  You ended up with a different option than the math suggested —
+                  worth remembering next time similar criteria show up.
+                </span>
               </p>
             )}
 
@@ -196,7 +199,7 @@ function ReviewForm({ decision }: { decision: Decision }) {
                 className={cn(
                   'flex cursor-pointer flex-col items-center justify-center gap-0.5 rounded-lg px-1 py-3 transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent',
                   selected
-                    ? 'bg-surface-top text-accent-text shadow-[0_0_20px_rgba(139,92,246,0.15)]'
+                    ? 'bg-surface-top text-accent-text shadow-tile-strong'
                     : 'text-ink-soft hover:bg-surface-high hover:text-ink',
                 )}
               >
@@ -236,7 +239,7 @@ function ReviewForm({ decision }: { decision: Decision }) {
             className={cn(
               'flex cursor-pointer items-start gap-3 rounded-xl p-3.5 text-left transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent',
               wouldChooseAgain
-                ? 'bg-surface-high shadow-[0_0_24px_rgba(139,92,246,0.12)]'
+                ? 'bg-surface-high shadow-tile'
                 : 'bg-canvas hover:bg-surface-high',
             )}
           >
@@ -263,7 +266,7 @@ function ReviewForm({ decision }: { decision: Decision }) {
             className={cn(
               'flex cursor-pointer items-start gap-3 rounded-xl p-3.5 text-left transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent',
               !wouldChooseAgain
-                ? 'bg-surface-high shadow-[0_0_24px_rgba(139,92,246,0.12)]'
+                ? 'bg-surface-high shadow-tile'
                 : 'bg-canvas hover:bg-surface-high',
             )}
           >

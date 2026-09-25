@@ -1,5 +1,11 @@
-import type { ReactNode } from 'react'
+import { useState, type ReactNode } from 'react'
 import { cn } from '@/lib/utils/cn'
+import { currentTheme, setTheme, type Theme } from '@/lib/theme'
+import {
+  currentSidebar,
+  setSidebar,
+  type SidebarState,
+} from '@/lib/sidebar'
 
 export type NavIcon = 'home' | 'plus' | 'journal' | 'patterns' | 'settings'
 
@@ -74,9 +80,118 @@ function NavGlyph({ icon, className }: { icon: NavIcon; className: string }) {
   }
 }
 
+/**
+ * Sun/moon theme switch. The pre-paint script in index.html has already
+ * applied a theme, so state is read from the DOM rather than recomputed.
+ */
+function ThemeToggle({ theme, onToggle }: { theme: Theme; onToggle: () => void }) {
+  const isLight = theme === 'light'
+  const label = isLight ? 'Switch to dark theme' : 'Switch to light theme'
+  return (
+    <button
+      type="button"
+      onClick={onToggle}
+      aria-pressed={isLight}
+      aria-label={label}
+      title={label}
+      className="flex h-10 w-10 shrink-0 cursor-pointer items-center justify-center rounded-lg border border-hairline bg-surface text-ink-soft transition-colors duration-150 hover:bg-surface-high hover:text-ink focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent md:h-9 md:w-9"
+    >
+      <ThemeGlyph theme={theme} className="h-[18px] w-[18px]" />
+    </button>
+  )
+}
+
+function ThemeGlyph({ theme, className }: { theme: Theme; className: string }) {
+  if (theme === 'light') {
+    return (
+      <svg viewBox="0 0 20 20" fill="none" className={className} aria-hidden>
+        <circle cx="10" cy="10" r="3.5" stroke="currentColor" strokeWidth="1.4" />
+        <path
+          d="M10 2.7v1.7M10 15.6v1.7M2.7 10h1.7M15.6 10h1.7M4.9 4.9l1.2 1.2M13.9 13.9l1.2 1.2M15.1 4.9l-1.2 1.2M6.1 13.9l-1.2 1.2"
+          stroke="currentColor"
+          strokeWidth="1.3"
+          strokeLinecap="round"
+        />
+      </svg>
+    )
+  }
+  return (
+    <svg viewBox="0 0 20 20" fill="none" className={className} aria-hidden>
+      <path
+        d="M16.3 12.3A6.5 6.5 0 0 1 7.7 3.7a6.8 6.8 0 1 0 8.6 8.6Z"
+        stroke="currentColor"
+        strokeWidth="1.4"
+        strokeLinejoin="round"
+      />
+    </svg>
+  )
+}
+
+/**
+ * Desktop-only sidebar collapse. The collapsed state is applied by an
+ * attribute on <html> (set pre-paint), so nothing about the layout waits on
+ * React; this button only flips that attribute.
+ */
+function SidebarToggle({
+  state,
+  onToggle,
+}: {
+  state: SidebarState
+  onToggle: () => void
+}) {
+  const collapsed = state === 'collapsed'
+  const label = collapsed ? 'Show sidebar' : 'Hide sidebar'
+  return (
+    <button
+      type="button"
+      onClick={onToggle}
+      aria-pressed={collapsed}
+      aria-label={label}
+      title={label}
+      className="hidden h-9 w-9 shrink-0 cursor-pointer items-center justify-center rounded-lg border border-hairline bg-surface text-ink-soft transition-colors duration-150 hover:bg-surface-high hover:text-ink focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent md:flex"
+    >
+      <svg viewBox="0 0 20 20" fill="none" className="h-[18px] w-[18px]" aria-hidden>
+        <rect
+          x="2.6"
+          y="3.4"
+          width="14.8"
+          height="13.2"
+          rx="2.2"
+          stroke="currentColor"
+          strokeWidth="1.4"
+        />
+        <path d="M7.9 3.4v13.2" stroke="currentColor" strokeWidth="1.4" />
+        {collapsed && (
+          <path
+            d="M11.4 8.2 13.9 10l-2.5 1.8"
+            stroke="currentColor"
+            strokeWidth="1.3"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          />
+        )}
+      </svg>
+    </button>
+  )
+}
+
 export function AppShell({ navItems, activeRoute, onNavigate, mainRef, children }: AppShellProps) {
   const primaryNav = navItems.filter((item) => item.icon !== 'settings')
   const settingsNav = navItems.filter((item) => item.icon === 'settings')
+  const [theme, setThemeState] = useState<Theme>(() => currentTheme())
+  const [sidebar, setSidebarState] = useState<SidebarState>(() => currentSidebar())
+
+  const handleToggleTheme = () => {
+    const next: Theme = theme === 'dark' ? 'light' : 'dark'
+    setThemeState(next)
+    setTheme(next)
+  }
+
+  const handleToggleSidebar = () => {
+    const next: SidebarState = sidebar === 'expanded' ? 'collapsed' : 'expanded'
+    setSidebarState(next)
+    setSidebar(next)
+  }
 
   const renderLink = (
     item: NavItem,
@@ -117,7 +232,7 @@ export function AppShell({ navItems, activeRoute, onNavigate, mainRef, children 
       />
 
       {/* ── Desktop sidebar ─────────────────────────────────────────── */}
-      <aside className="fixed top-0 left-0 z-40 hidden h-full w-60 flex-col justify-between border-r border-hairline bg-canvas md:flex">
+      <aside className="sidebar-rail fixed top-0 left-0 z-40 hidden h-full w-60 flex-col justify-between border-r border-hairline bg-canvas md:flex">
         <div className="flex flex-col">
           <div className="flex h-16 items-center gap-2 px-5">
             <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-accent/15">
@@ -156,7 +271,7 @@ export function AppShell({ navItems, activeRoute, onNavigate, mainRef, children 
         <div className="p-3">
           <div className="flex items-center justify-between rounded-lg bg-surface px-3 py-2">
             <span className="flex items-center gap-2">
-              <span aria-hidden className="h-2 w-2 rounded-full bg-accent shadow-[0_0_8px_rgba(139,92,246,0.8)]" />
+              <span aria-hidden className="h-2 w-2 rounded-full bg-accent shadow-marker" />
               <span className="font-mono text-[11px] font-medium text-ink-soft">Local data</span>
             </span>
             <svg viewBox="0 0 16 16" fill="none" className="h-3.5 w-3.5 text-ink-faint" aria-hidden>
@@ -167,25 +282,35 @@ export function AppShell({ navItems, activeRoute, onNavigate, mainRef, children 
         </div>
       </aside>
 
-      {/* ── Content column ──────────────────────────────────────────── */}
-      <div className="md:pl-60">
+      {/* ── Content column ─────────────────────────────────────────────
+          Full-height flex column so <main> absorbs any spare space: on short
+          pages the footer anchors to the viewport instead of floating with a
+          viewport-sized gap beneath it. */}
+      <div className="sidebar-offset flex min-h-dvh flex-col md:pl-60">
         {/* Desktop top bar */}
         <header className="sticky top-0 z-30 hidden h-16 items-center justify-between border-b border-hairline bg-canvas/85 px-8 backdrop-blur md:flex">
           <div aria-hidden className="font-mono text-[11px] tracking-[0.14em] text-ink-faint uppercase">
             Decide with clarity
           </div>
-          <button
-            type="button"
-            onClick={() => onNavigate('new-decision')}
-            className="inline-flex cursor-pointer items-center gap-1.5 rounded-lg bg-accent px-3.5 py-2 text-sm font-semibold text-white shadow-[0_0_24px_rgba(124,78,232,0.28)] transition-[background-color,box-shadow] duration-150 hover:bg-[#8b5cf6] hover:shadow-[0_0_32px_rgba(124,78,232,0.45)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"
-          >
-            <NavGlyph icon="plus" className="h-4 w-4" />
-            New decision
-          </button>
+          <div className="flex items-center gap-2">
+            <SidebarToggle state={sidebar} onToggle={handleToggleSidebar} />
+            <ThemeToggle theme={theme} onToggle={handleToggleTheme} />
+            <button
+              type="button"
+              onClick={() => onNavigate('new-decision')}
+              className="inline-flex cursor-pointer items-center gap-1.5 rounded-lg bg-accent px-3.5 py-2 text-sm font-semibold text-white shadow-glow transition-[background-color,box-shadow] duration-150 hover:bg-accent-bright hover:shadow-glow-lg focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"
+            >
+              <NavGlyph icon="plus" className="h-4 w-4" />
+              New decision
+            </button>
+          </div>
         </header>
 
-        {/* Mobile top bar */}
-        <header className="sticky top-0 z-30 flex h-14 items-center justify-between border-b border-hairline bg-canvas/90 px-4 backdrop-blur md:hidden">
+        {/* Mobile top bar.
+            Opaque on purpose: a translucent sticky bar needs backdrop-filter,
+            and in embedded WebViews that combo can stop repainting mid-scroll
+            — the bar then disappears entirely while scrolling. */}
+        <header className="sticky top-0 z-30 flex h-14 items-center justify-between gap-3 border-b border-hairline bg-canvas px-4 md:hidden">
           <div className="flex items-center gap-2">
             <span className="flex h-7 w-7 items-center justify-center rounded-md bg-accent/15">
               <NavGlyph icon="journal" className="h-4 w-4 text-accent-text" />
@@ -197,11 +322,14 @@ export function AppShell({ navItems, activeRoute, onNavigate, mainRef, children 
               </span>
             </span>
           </div>
-          <div className="flex items-center gap-1.5 rounded-full bg-surface-high/60 px-2.5 py-1">
-            <span aria-hidden className="h-1.5 w-1.5 rounded-full bg-accent" />
-            <span className="font-mono text-[9px] font-semibold tracking-[0.12em] text-ink-soft uppercase">
-              Local vault
-            </span>
+          <div className="flex items-center gap-2">
+            <div className="flex items-center gap-1.5 rounded-full bg-surface-high px-2.5 py-1">
+              <span aria-hidden className="h-1.5 w-1.5 rounded-full bg-accent" />
+              <span className="font-mono text-[9px] font-semibold tracking-[0.12em] text-ink-soft uppercase">
+                Local vault
+              </span>
+            </div>
+            <ThemeToggle theme={theme} onToggle={handleToggleTheme} />
           </div>
         </header>
 
@@ -214,9 +342,26 @@ export function AppShell({ navItems, activeRoute, onNavigate, mainRef, children 
           {children}
         </main>
 
-        <footer className="hidden px-8 pb-6 md:block">
-          <p className="font-mono text-[11px] text-ink-faint">
-            Decision Desk — think decisions through, step by step.
+        {/* Footer carries the tagline and the author credit. Shown on mobile
+            too (padded clear of the bottom nav) so the credit is never
+            desktop-only. */}
+        <footer className="px-4 pt-6 pb-24 md:px-8 md:pb-6">
+          <p className="flex flex-wrap items-center justify-center gap-x-2 gap-y-1 text-center font-mono text-[11px] text-ink-faint md:justify-start md:text-left">
+            <span>Decision Desk — think decisions through, step by step.</span>
+            <span aria-hidden className="hidden md:inline">
+              ·
+            </span>
+            <span>
+              Built by{' '}
+              <a
+                href="https://github.com/haseebno1"
+                target="_blank"
+                rel="noreferrer noopener"
+                className="text-ink-soft underline decoration-hairline-strong underline-offset-2 transition-colors hover:text-accent-text hover:decoration-accent"
+              >
+                Abdul Haseeb
+              </a>
+            </span>
           </p>
         </footer>
       </div>
@@ -224,7 +369,7 @@ export function AppShell({ navItems, activeRoute, onNavigate, mainRef, children 
       {/* ── Mobile bottom nav ───────────────────────────────────────── */}
       <nav
         aria-label="Primary"
-        className="fixed inset-x-0 bottom-0 z-40 border-t border-hairline bg-canvas/90 pb-[env(safe-area-inset-bottom)] backdrop-blur md:hidden"
+        className="fixed inset-x-0 bottom-0 z-40 border-t border-hairline bg-canvas pb-[env(safe-area-inset-bottom)] md:hidden"
       >
         <ul className="flex h-16 items-center justify-around px-2">
           {navItems.map((item) => {
@@ -238,7 +383,7 @@ export function AppShell({ navItems, activeRoute, onNavigate, mainRef, children 
                     onClick={() => onNavigate(item.id)}
                     className="group flex cursor-pointer flex-col items-center gap-1 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"
                   >
-                    <span className="flex h-11 w-11 items-center justify-center rounded-full bg-accent text-white shadow-[0_0_24px_rgba(139,92,246,0.35)] transition-transform duration-200 group-active:scale-95">
+                    <span className="flex h-11 w-11 items-center justify-center rounded-full bg-accent text-white shadow-glow transition-transform duration-200 group-active:scale-95">
                       <NavGlyph icon="plus" className="h-5 w-5" />
                     </span>
                     <span className="font-mono text-[9px] font-semibold tracking-wider text-ink-soft uppercase">

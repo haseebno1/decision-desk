@@ -1,5 +1,6 @@
 import { useMemo } from 'react'
 import { SectionLabel } from '@/components/ui/Button'
+import { EmptyState } from '@/components/ui/inputs'
 import { useDecisions } from '@/features/decisions/decisionStore'
 import {
   averageOptionsPerDecision,
@@ -8,8 +9,23 @@ import {
 } from '@/lib/patterns'
 import { formatTotal } from '@/lib/scoring'
 import { CATEGORY_LABELS, STAKE_LABELS } from '@/types/decision'
-import { EmptyState } from '@/components/ui/inputs'
+import {
+  ChartCard,
+  ColumnChart,
+  Donut,
+  RankedBars,
+  StackedBar,
+  type ChartSegment,
+} from './charts'
 
+/**
+ * Patterns — the retrospective read of everything captured so far.
+ *
+ * Every figure on this screen comes from `buildPatternsReport` (or the
+ * sibling `averageOptionsPerDecision`) or is a direct count of stored records.
+ * Nothing here re-derives an engine number: if a new statistic is wanted, it
+ * belongs in `src/lib/patterns.ts` with a test.
+ */
 export function PatternsScreen() {
   const { decisions } = useDecisions()
 
@@ -18,6 +34,30 @@ export function PatternsScreen() {
     () => averageOptionsPerDecision(decisions),
     [decisions],
   )
+
+  // Direct tallies of the records themselves — how far each decision got, and
+  // how the reviews were rated. Counts only: no averages or scores are
+  // recomputed here.
+  const stageCounts = useMemo(() => {
+    let draft = 0
+    let decided = 0
+    let reviewed = 0
+    for (const decision of decisions) {
+      if (decision.status === 'draft') draft += 1
+      else if (decision.outcome?.review) reviewed += 1
+      else decided += 1
+    }
+    return { draft, decided, reviewed }
+  }, [decisions])
+
+  const satisfactionBins = useMemo(() => {
+    const bins = [0, 0, 0, 0, 0]
+    for (const decision of decisions) {
+      const review = decision.outcome?.review
+      if (review) bins[review.satisfaction - 1] += 1
+    }
+    return bins
+  }, [decisions])
 
   if (decisions.length === 0) {
     return (
@@ -44,6 +84,27 @@ export function PatternsScreen() {
     )
   }
 
+  const stageSegments: ChartSegment[] = [
+    { key: 'reviewed', label: 'Reviewed', value: stageCounts.reviewed, tone: 'accent' },
+    { key: 'decided', label: 'Decided, not reviewed', value: stageCounts.decided, tone: 'accent-mid' },
+    { key: 'draft', label: 'Still drafts', value: stageCounts.draft, tone: 'muted' },
+  ]
+
+  const stakeSegments: ChartSegment[] = report.stakes.map((row, index) => ({
+    key: row.stake,
+    label: STAKE_LABELS[row.stake],
+    value: row.count,
+    tone: index === 0 ? 'accent' : index === 1 ? 'accent-mid' : 'accent-soft',
+  }))
+
+  // Columns are labelled with the rating itself (1–5), matching the scale on
+  // the outcome-review form rather than inventing new wording for it.
+  const satisfactionColumns = satisfactionBins.map((count, index) => ({
+    key: String(index + 1),
+    label: String(index + 1),
+    value: count,
+  }))
+
   return (
     <div className="flex flex-col gap-8">
       <header className="flex flex-col gap-1">
@@ -54,8 +115,8 @@ export function PatternsScreen() {
         </p>
       </header>
 
-      {/* Metric trio — compact surface nodes. */}
-      <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
+      {/* Headline numbers — the same five figures as before, given room. */}
+      <div className="grid grid-cols-2 gap-3 lg:grid-cols-4">
         <StatCard label="Decisions" value={String(report.total)} />
         <StatCard
           label="Avg winner score"
@@ -80,72 +141,110 @@ export function PatternsScreen() {
         />
       </div>
 
-      {report.reviewedCount > 0 && (
-        <div className="grid grid-cols-2 gap-3">
-          <StatCard
-            label="Avg satisfaction"
-            value={`${report.averageSatisfaction!.toFixed(1)}/5`}
+      <div className="grid gap-4 lg:grid-cols-2">
+        <ChartCard
+          title="Where they stand"
+          caption="Every decision by how far it got."
+        >
+          <Donut
+            title="Where decisions stand"
+            segments={stageSegments}
+            total={report.total}
+            centerLabel="Total"
           />
-          <StatCard
-            label="Would redo same way"
-            value={`${Math.round(report.wouldChooseAgainRate! * 100)}%`}
-            accent
+        </ChartCard>
+
+        <ChartCard
+          title="How it felt afterwards"
+          caption={
+            report.reviewedCount > 0
+              ? `${report.reviewedCount} reviewed decision${report.reviewedCount === 1 ? '' : 's'}.`
+              : 'No reviews recorded yet.'
+          }
+        >
+          {report.reviewedCount > 0 ? (
+            <ColumnChart
+              title="Satisfaction ratings"
+              columns={satisfactionColumns}
+              unitLabel="reviews"
+            />
+          ) : (
+            <p className="text-sm text-ink-soft">
+              Commit a decision, live with it, then record a review — the
+              ratings land here.
+            </p>
+          )}
+        </ChartCard>
+      </div>
+
+      <div className="grid gap-4 lg:grid-cols-2">
+        <ChartCard title="By category" caption="What kinds of choices you face.">
+          <RankedBars
+            title="Decisions by category"
+            rows={report.categories.map((row) => ({
+              key: row.category,
+              label: CATEGORY_LABELS[row.category],
+              value: row.count,
+            }))}
           />
-        </div>
-      )}
+        </ChartCard>
 
-      <section aria-labelledby="categories-heading" className="flex flex-col gap-3">
-        <SectionLabel>By category</SectionLabel>
-        <BarList
-          rows={report.categories.map((row) => ({
-            key: row.category,
-            label: CATEGORY_LABELS[row.category],
-            count: row.count,
-          }))}
-          barClass="bg-accent"
-        />
-      </section>
+        <ChartCard title="By stake" caption="How much is riding on them.">
+          <StackedBar
+            title="Decisions by stake"
+            segments={stakeSegments}
+            total={report.total}
+          />
+          {report.reviewedCount > 0 && (
+            <div className="grid grid-cols-2 gap-3 border-t border-hairline pt-4">
+              <MiniStat
+                label="Avg satisfaction"
+                value={`${report.averageSatisfaction!.toFixed(1)}/5`}
+              />
+              <MiniStat
+                label="Would redo same way"
+                value={`${Math.round(report.wouldChooseAgainRate! * 100)}%`}
+                accent
+              />
+            </div>
+          )}
+        </ChartCard>
+      </div>
 
-      <section aria-labelledby="stakes-heading" className="flex flex-col gap-3">
-        <SectionLabel>By stake</SectionLabel>
-        <BarList
-          rows={report.stakes.map((row) => ({
-            key: row.stake,
-            label: STAKE_LABELS[row.stake],
-            count: row.count,
-          }))}
-          barClass="bg-accent/50"
-        />
-      </section>
-
-      <section aria-labelledby="criteria-heading" className="flex flex-col gap-3">
-        <SectionLabel>Most-used criteria</SectionLabel>
+      <ChartCard
+        title="Most-used criteria"
+        caption="What you keep measuring against, across every decision."
+      >
         {report.criteria.length === 0 ? (
           <p className="text-sm text-ink-soft">
             No named criteria yet — they'll appear as you weight decisions.
           </p>
         ) : (
-          <BarList
+          <RankedBars
+            title="Most-used criteria"
+            tone="accent-mid"
             rows={report.criteria.map((row) => ({
               key: row.label.toLowerCase(),
               label: row.label,
-              count: row.count,
+              value: row.count,
             }))}
-            barClass="bg-accent/70"
           />
         )}
-      </section>
+      </ChartCard>
 
       {report.insights.length > 0 && (
         <section aria-labelledby="insights-heading" className="flex flex-col gap-3">
           <SectionLabel tone="accent">Something interesting</SectionLabel>
-          <ul className="flex flex-col gap-2.5">
+          <ul className="grid gap-2.5 md:grid-cols-2">
             {report.insights.map((insight) => (
               <li
                 key={insight}
-                className="rounded-xl border border-hairline bg-surface p-4"
+                className="flex gap-3 rounded-xl border border-hairline bg-surface p-4"
               >
-                <p className="text-[15px] leading-relaxed text-ink italic">“{insight}”</p>
+                <span aria-hidden className="shrink-0 text-accent-text">
+                  ◆
+                </span>
+                <p className="text-[15px] leading-relaxed text-ink">{insight}</p>
               </li>
             ))}
           </ul>
@@ -172,8 +271,8 @@ function StatCard({
       <span
         className={
           accent
-            ? 'text-2xl font-semibold tabular-nums text-accent-text'
-            : 'text-2xl font-semibold tabular-nums text-ink'
+            ? 'text-2xl font-semibold tabular-nums text-accent-text md:text-3xl'
+            : 'text-2xl font-semibold tabular-nums text-ink md:text-3xl'
         }
       >
         {value}
@@ -182,35 +281,30 @@ function StatCard({
   )
 }
 
-function BarList({
-  rows,
-  barClass,
+function MiniStat({
+  label,
+  value,
+  accent = false,
 }: {
-  rows: Array<{ key: string; label: string; count: number }>
-  barClass: string
+  label: string
+  value: string
+  accent?: boolean
 }) {
-  const max = Math.max(...rows.map((r) => r.count), 1)
   return (
-    <ul className="flex flex-col gap-2.5">
-      {rows.map((row) => (
-        <li key={row.key} className="flex items-center gap-3 text-sm">
-          <span className="w-32 shrink-0 truncate text-ink">{row.label}</span>
-          <div
-            className="h-1.5 flex-1 overflow-hidden rounded-full bg-surface-high"
-            role="img"
-            aria-label={`${row.label}: ${row.count} decision${row.count === 1 ? '' : 's'}`}
-          >
-            <div
-              className={`h-full rounded-full transition-[width] duration-500 ${barClass}`}
-              style={{ width: `${(row.count / max) * 100}%` }}
-            />
-          </div>
-          <span className="w-8 shrink-0 text-right font-mono text-[11px] tabular-nums text-ink-soft">
-            {row.count}
-          </span>
-        </li>
-      ))}
-    </ul>
+    <div className="flex flex-col gap-0.5">
+      <span className="font-mono text-[10px] tracking-[0.12em] text-ink-soft uppercase">
+        {label}
+      </span>
+      <span
+        className={
+          accent
+            ? 'font-mono text-lg font-semibold tabular-nums text-accent-text'
+            : 'font-mono text-lg font-semibold tabular-nums text-ink'
+        }
+      >
+        {value}
+      </span>
+    </div>
   )
 }
 

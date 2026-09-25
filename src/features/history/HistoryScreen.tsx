@@ -56,7 +56,7 @@ export function HistoryScreen({ onOpen }: HistoryScreenProps) {
         <p className="flex items-center gap-2 font-mono text-[11px] font-semibold tracking-[0.14em] text-ink-soft uppercase">
           <span
             aria-hidden
-            className="h-1.5 w-1.5 rounded-full bg-accent shadow-[0_0_10px_rgba(139,92,246,0.8)]"
+            className="h-1.5 w-1.5 rounded-full bg-accent shadow-marker"
           />
           Cognitive log
         </p>
@@ -167,7 +167,7 @@ export function HistoryScreen({ onOpen }: HistoryScreenProps) {
             />
             <span
               aria-hidden
-              className="absolute top-[3px] left-[3px] h-2 w-2 rounded-full bg-accent shadow-[0_0_12px_rgba(139,92,246,0.8)] sm:left-[7px]"
+              className="absolute top-[3px] left-[3px] h-2 w-2 rounded-full bg-accent shadow-marker sm:left-[7px]"
             />
             <div className="mb-4 flex items-center gap-2">
               <h2
@@ -233,7 +233,7 @@ function TimelineCard({
       type="button"
       onClick={onOpen}
       aria-label={`Open ${decision.title}`}
-      className="group w-full cursor-pointer rounded-xl border border-hairline bg-surface p-4 text-left transition-[background-color,border-color,transform,box-shadow] duration-200 hover:-translate-y-0.5 hover:border-hairline-strong hover:bg-surface-high hover:shadow-[0_8px_24px_rgba(0,0,0,0.35)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"
+      className="group w-full cursor-pointer rounded-xl border border-hairline bg-surface p-4 text-left transition-[background-color,border-color,transform,box-shadow] duration-200 hover:-translate-y-0.5 hover:border-hairline-strong hover:bg-surface-high hover:shadow-lift focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"
     >
       <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
         <div className="min-w-0 flex-1">

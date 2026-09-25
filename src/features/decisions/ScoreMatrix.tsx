@@ -64,7 +64,7 @@ export function ScoreMatrix({
                     className={cn(
                       'h-2 w-2 rounded-full',
                       option.id === bestOptionId
-                        ? 'bg-accent shadow-[0_0_8px_rgba(139,92,246,0.8)]'
+                        ? 'bg-accent shadow-marker'
                         : 'bg-ink-faint',
                     )}
                   />
@@ -158,7 +158,7 @@ function ScoreCell({
           className={cn(
             'h-7 w-7 cursor-pointer rounded-md text-xs transition-colors',
             value === score
-              ? 'bg-accent font-semibold text-white shadow-[0_0_12px_rgba(139,92,246,0.3)]'
+              ? 'bg-accent font-semibold text-white shadow-cell'
               : 'bg-surface-high text-ink-soft hover:bg-surface-top hover:text-ink',
           )}
         >

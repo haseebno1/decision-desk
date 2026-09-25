@@ -22,6 +22,13 @@ export function HomeScreen({ onStart, onEdit }: HomeScreenProps) {
       onAction: () => restoreDecision(decision),
     })
   }
+  // "Recent decisions" has to mean recent: the store holds insertion order,
+  // which never changes when an older decision is edited (History already
+  // sorts by updatedAt, so the two screens disagreed).
+  const recent = [...decisions].sort(
+    (a, b) => new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime(),
+  )
+
   const draftCount = decisions.filter((d) => d.status === 'draft').length
   const committedCount = decisions.length - draftCount
   const summary = [
@@ -85,7 +92,7 @@ export function HomeScreen({ onStart, onEdit }: HomeScreenProps) {
           </EmptyState>
         ) : (
           <ul className="flex flex-col gap-2.5">
-            {decisions.map((decision) => (
+            {recent.map((decision) => (
               <li key={decision.id}>
                 <DecisionCard
                   decision={decision}

@@ -45,6 +45,63 @@ export function ResultScreen({ decision, onBack }: ResultScreenProps) {
   const winnerTotal = ranked.find((r) => r.optionId === winner.id)?.total ?? 0
   const fitPct = Math.max(0, Math.min(100, (winnerTotal / 10) * 100))
 
+  // Option letters (A, B, C… in the same order the editors and the matrix
+  // use) so the evidence columns can be read without repeating long labels.
+  const lettersByOption = new Map(
+    decision.options.map((option, index) => [
+      option.id,
+      String.fromCharCode(65 + index),
+    ]),
+  )
+
+  // Where the winner stands, criterion by criterion. A contribution value is
+  // points toward the average, so it stays positive even on a trade-off the
+  // winner loses — standing has to be judged against the rival scores, and a
+  // shared top score is a tie, not a lead. The full engine sentences live
+  // once, in the reasoning list below: the hero used to repeat reasons[0].
+  const standings = contributions.map((entry) => {
+    const rivalScores = Object.values(entry.scoresByOption).filter(
+      (value): value is number => typeof value === 'number',
+    )
+    const own = entry.scoresByOption[winner.id]
+    const best = rivalScores.length > 0 ? Math.max(...rivalScores) : undefined
+    const standing: 'leads' | 'ties' | 'behind' | 'unscored' =
+      own === undefined || best === undefined
+        ? 'unscored'
+        : own < best
+          ? 'behind'
+          : rivalScores.filter((value) => value === best).length > 1
+            ? 'ties'
+            : 'leads'
+    return {
+      label: entry.label,
+      points: entry.contributions[winner.id] ?? 0,
+      standing,
+    }
+  })
+
+  const describe = (rows: typeof standings) =>
+    rows
+      .slice(0, 2)
+      .map((row) => `${row.label} (+${row.points.toFixed(1)})`)
+      .join(' and ')
+
+  const byPointsDesc = (a: { points: number }, b: { points: number }) =>
+    b.points - a.points
+  const leads = standings
+    .filter((row) => row.standing === 'leads')
+    .sort(byPointsDesc)
+  const ties = standings
+    .filter((row) => row.standing === 'ties')
+    .sort(byPointsDesc)
+
+  const leadSentence =
+    leads.length > 0
+      ? `Leads on ${describe(leads)}.`
+      : ties.length > 0
+        ? `Ties the best score on ${describe(ties)}, winning on aggregate.`
+        : 'Wins on aggregate — no criterion swings it decisively.'
+
   return (
     <div className="flex flex-col gap-8">
       <header className="flex flex-col gap-2">
@@ -78,12 +135,11 @@ export function ResultScreen({ decision, onBack }: ResultScreenProps) {
                   cy="80"
                   r="68"
                   fill="none"
-                  className="stroke-accent-text"
+                  className="dial-glow stroke-accent-text"
                   strokeWidth="7"
                   strokeLinecap="round"
                   strokeDasharray={2 * Math.PI * 68}
                   strokeDashoffset={2 * Math.PI * 68 * (1 - fitPct / 100)}
-                  style={{ filter: 'drop-shadow(0 0 8px rgba(139,92,246,0.45))' }}
                 />
               </svg>
               <div className="absolute inset-0 flex flex-col items-center justify-center text-center">
@@ -97,10 +153,12 @@ export function ResultScreen({ decision, onBack }: ResultScreenProps) {
             </div>
             <span
               className={cn(
-                'inline-flex items-center gap-1.5 rounded-full px-3 py-1 font-mono text-[10px] font-semibold tracking-[0.12em] uppercase',
+                'inline-flex items-center gap-1.5 rounded-full border px-3 py-1 font-mono text-[10px] font-semibold tracking-[0.12em] uppercase',
+                // A close call is unresolved rather than momentum, so it stays
+                // neutral: a hairline ring marks it instead of a second accent.
                 isCloseCall
-                  ? 'bg-surface-high text-amber-300'
-                  : 'bg-surface-high text-accent-text',
+                  ? 'border-hairline bg-surface-high text-ink'
+                  : 'border-transparent bg-surface-high text-accent-text',
               )}
             >
               {isCloseCall
@@ -116,8 +174,7 @@ export function ResultScreen({ decision, onBack }: ResultScreenProps) {
             <div>
               <SectionLabel>Comparative resonance</SectionLabel>
               <p className="mt-1.5 text-[15px] leading-relaxed text-ink-soft">
-                {reasons[0]}{' '}
-                {Number.isFinite(gap) && `That's a ${formatTotal(gap)}-point gap on the 0–10 scale.`}
+                {leadSentence}
               </p>
             </div>
             <div className="grid grid-cols-1 gap-2.5 sm:grid-cols-2">
@@ -127,7 +184,7 @@ export function ResultScreen({ decision, onBack }: ResultScreenProps) {
                   className={cn(
                     'flex items-center justify-between gap-3 rounded-lg p-3',
                     row.optionId === winner.id
-                      ? 'bg-surface-high shadow-[0_0_20px_rgba(139,92,246,0.12)]'
+                      ? 'bg-surface-high shadow-tile'
                       : 'bg-canvas opacity-80',
                   )}
                 >
@@ -135,12 +192,14 @@ export function ResultScreen({ decision, onBack }: ResultScreenProps) {
                     <span
                       aria-hidden
                       className={cn(
-                        'h-2.5 w-2.5 shrink-0 rounded-full',
+                        'flex h-5 w-5 shrink-0 items-center justify-center rounded font-mono text-[10px] font-semibold',
                         row.optionId === winner.id
-                          ? 'bg-accent shadow-[0_0_8px_rgba(139,92,246,0.8)]'
-                          : 'bg-ink-faint',
+                          ? 'bg-accent/15 text-accent-text'
+                          : 'bg-surface-top text-ink-soft',
                       )}
-                    />
+                    >
+                      {lettersByOption.get(row.optionId) ?? '?'}
+                    </span>
                     <div className="min-w-0">
                       <div className="truncate text-sm font-semibold text-ink">
                         {row.label || 'Untitled option'}
@@ -194,6 +253,23 @@ export function ResultScreen({ decision, onBack }: ResultScreenProps) {
           </p>
         </div>
         <div className="flex flex-col gap-4 rounded-xl border border-hairline bg-surface p-4 md:col-span-8 md:p-5">
+          {/* Column legend — the option letters every row below aligns to. */}
+          <div
+            aria-hidden
+            className="flex items-center gap-2 border-b border-hairline pb-2"
+          >
+            <span className="flex-1 font-mono text-[10px] font-semibold tracking-[0.14em] text-ink-faint uppercase">
+              Criterion
+            </span>
+            {decision.options.map((option) => (
+              <span
+                key={option.id}
+                className="w-10 shrink-0 text-center font-mono text-[10px] font-semibold tracking-wider text-ink-soft uppercase"
+              >
+                {lettersByOption.get(option.id)}
+              </span>
+            ))}
+          </div>
           <ol className="flex flex-col gap-3">
             {contributions.map((contribution, index) => (
               <CriterionRow
@@ -296,34 +372,46 @@ function CriterionRow({
 
   return (
     <li className="flex flex-col gap-2">
-      <div className="flex flex-wrap items-center justify-between gap-2">
-        <div className="flex items-center gap-2">
+      <div className="flex items-center gap-2">
+        <div className="flex min-w-0 flex-1 items-center gap-2">
           <span className="font-mono text-[11px] text-ink-faint">
             {String(index).padStart(2, '0')}
           </span>
-          <span className="text-sm font-medium text-ink">{label}</span>
-          <span className="rounded bg-surface-high px-1.5 py-0.5 font-mono text-[10px] text-ink-soft uppercase">
+          <span className="truncate text-sm font-medium text-ink">{label}</span>
+          <span className="shrink-0 rounded bg-surface-high px-1.5 py-0.5 font-mono text-[10px] text-ink-soft uppercase">
             {weight}/5
           </span>
         </div>
-        {leaderOptionId !== undefined && (
-          <span className="font-mono text-[11px] text-ink-soft">
-            {options.map((option) => {
-              const score = scoresByOption[option.id]
-              if (score === undefined) return null
-              const leads = leaderOptionId === option.id
-              return (
-                <span
-                  key={option.id}
-                  className={cn('ml-2', leads ? 'text-accent-text font-semibold' : '')}
-                >
-                  {option.label || 'Untitled'} {score}
-                  {leads && ' ★'}
+        {/* One fixed-width column per option, so scores align down the list. */}
+        <div className="flex shrink-0 items-center gap-1">
+          {options.map((option) => {
+            const score = scoresByOption[option.id]
+            const leads = leaderOptionId === option.id && score !== undefined
+            return (
+              <span
+                key={option.id}
+                className={cn(
+                  'w-10 text-center font-mono text-[11px] tabular-nums',
+                  score === undefined
+                    ? 'text-ink-faint'
+                    : leads
+                      ? 'font-semibold text-accent-text'
+                      : 'text-ink-soft',
+                )}
+              >
+                <span className="sr-only">
+                  {`${option.label || 'Untitled option'}: `}
                 </span>
-              )
-            })}
-          </span>
-        )}
+                {score ?? '–'}
+                {leads && (
+                  <span aria-hidden className="ml-0.5">
+                    ★
+                  </span>
+                )}
+              </span>
+            )
+          })}
+        </div>
       </div>
       {/* Contribution bar — points this criterion adds to the winner's average. */}
       <div className="flex items-center gap-2">
@@ -331,7 +419,7 @@ function CriterionRow({
           <div
             className={cn(
               'h-full rounded-full',
-              isTradeOff ? 'bg-danger/70' : 'bg-accent',
+              isTradeOff ? 'bg-ink-faint' : 'bg-accent',
             )}
             style={{
               width: `${Math.min(100, ((contributions[winnerId] ?? 0) / 5) * 100)}%`,
@@ -343,8 +431,11 @@ function CriterionRow({
         </span>
       </div>
       {isTradeOff && (
-        <p className="text-xs font-medium text-danger">
-          ⚖ Trade-off: the recommendation loses on this criterion.
+        <p className="flex items-start gap-1.5 text-xs text-ink-soft">
+          <span aria-hidden className="shrink-0 text-ink">
+            ⚖
+          </span>
+          <span>Trade-off: the recommendation loses on this criterion.</span>
         </p>
       )}
     </li>

@@ -49,7 +49,7 @@ export class ErrorBoundary extends Component<
         <button
           type="button"
           onClick={this.handleReload}
-          className="cursor-pointer rounded-lg bg-accent px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-[#8b5cf6]"
+          className="cursor-pointer rounded-lg bg-accent px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-accent-bright"
         >
           Reload the app
         </button>

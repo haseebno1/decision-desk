@@ -109,7 +109,7 @@ export function DecisionForm({
       <header className="flex flex-col gap-2">
         <div className="flex items-center justify-between">
           <p className="flex items-center gap-2 font-mono text-[11px] font-semibold tracking-[0.14em] text-accent-text uppercase">
-            <span aria-hidden className="h-1.5 w-1.5 animate-pulse rounded-full bg-accent shadow-[0_0_8px_rgba(139,92,246,0.8)]" />
+            <span aria-hidden className="h-1.5 w-1.5 animate-pulse rounded-full bg-accent shadow-marker" />
             Step 01 · Define
           </p>
           <span className="font-mono text-[11px] text-ink-faint">01 / 03</span>
@@ -135,7 +135,7 @@ export function DecisionForm({
         <div className="flex items-start gap-3">
           <span
             aria-hidden
-            className="mt-2.5 h-2 w-2 shrink-0 rounded-full bg-accent shadow-[0_0_8px_rgba(139,92,246,0.6)]"
+            className="mt-2.5 h-2 w-2 shrink-0 rounded-full bg-accent shadow-marker-soft"
           />
           <div className="w-full">
             <Field

@@ -41,16 +41,100 @@
 
   --color-danger: #f27c8a;
 
+  /* Hover-only violet. The fill above is darker so white labels clear AA;
+     this brighter hue is used for hover states and bloom only. */
+  --color-accent-bright: #8b5cf6;
+
+  /* Elevation and bloom. Every glow in the app resolves to one of these, so
+     light mode (and any future re-skin) has a single place to restyle. */
+  --shadow-glow: 0 0 24px rgba(124, 78, 232, 0.28);
+  --shadow-glow-lg: 0 0 32px rgba(124, 78, 232, 0.45);
+  --shadow-marker: 0 0 8px rgba(139, 92, 246, 0.8); /* leader dots, timeline nodes */
+  --shadow-marker-soft: 0 0 8px rgba(139, 92, 246, 0.6);
+  --shadow-tile: 0 0 20px rgba(139, 92, 246, 0.12); /* raised/winner tiles */
+  --shadow-tile-strong: 0 0 20px rgba(139, 92, 246, 0.15); /* selected control */
+  --shadow-cell: 0 0 12px rgba(139, 92, 246, 0.3); /* pressed score cell */
+  --shadow-lift: 0 8px 24px rgba(0, 0, 0, 0.35); /* card hover lift */
+  --shadow-float: 0 20px 50px rgba(0, 0, 0, 0.65); /* toasts, overlays */
+
   --radius-df: 0.85rem;
   --radius-df-sm: 0.625rem;
 }
 
+/* Dark is the default theme. Light mode overrides every token in a single
+   block below, so one attribute on <html> re-skins the whole app — no
+   component knows which theme is active. */
 :root {
   color-scheme: dark;
+  accent-color: var(--color-accent);
+  --bloom: rgba(139, 92, 246, 0.45); /* verdict-dial bloom */
+}
+
+html[data-theme='light'] {
+  color-scheme: light;
+
+  --color-canvas: #f7f6fa;
+  --color-surface: #ffffff;
+  --color-surface-low: #fbfaff;
+  --color-surface-mid: #f1eef8;
+  --color-surface-high: #e9e5f4;
+  --color-surface-top: #ded8ee;
+
+  --color-ink: #1a1626; /* 12.8:1 on the strongest fill */
+  --color-ink-soft: #554f66; /* 5.6:1 worst case */
+  --color-ink-faint: #605974; /* 4.8:1 worst case */
+
+  --color-hairline: #dcd7e8;
+  --color-hairline-strong: #c4bcd8;
+
+  /* A deeper violet: the dark-mode fill (#7c4ee8) only reaches 4.2:1 under
+     white text, this clears 7.1:1. Hover darkens rather than lightens. */
+  --color-accent: #6d28d9;
+  --color-accent-bright: #5b21b6;
+  --color-accent-soft: rgba(109, 40, 217, 0.1);
+  --color-accent-text: #6d28d9; /* 5.1:1 on the strongest fill */
+
+  --color-danger: #b4232f;
+
+  /* Blooms soften: a violet halo that reads as light on near-black looks like
+     a smudge on white, so the alphas drop and the neutrals take over. */
+  --shadow-glow: 0 0 24px rgba(109, 40, 217, 0.18);
+  --shadow-glow-lg: 0 0 32px rgba(109, 40, 217, 0.28);
+  --shadow-marker: 0 0 8px rgba(109, 40, 217, 0.5);
+  --shadow-marker-soft: 0 0 8px rgba(109, 40, 217, 0.35);
+  --shadow-tile: 0 0 20px rgba(109, 40, 217, 0.1);
+  --shadow-tile-strong: 0 0 20px rgba(109, 40, 217, 0.14);
+  --shadow-cell: 0 0 12px rgba(109, 40, 217, 0.22);
+  --shadow-lift: 0 8px 24px rgba(26, 22, 38, 0.1);
+  --shadow-float: 0 20px 50px rgba(26, 22, 38, 0.18);
+
+  --bloom: rgba(109, 40, 217, 0.3);
+}
+
+::selection {
+  background: var(--color-accent);
+  color: #ffffff;
+}
+
+/* Desktop sidebar collapse. Driven by a data attribute (applied pre-paint)
+   rather than React state, so a collapsed rail never flashes open on load.
+   Desktop-only: the mobile shell has no sidebar. The attribute selectors
+   outrank Tailwind's `md:flex` / `md:pl-60` utilities on specificity, so no
+   `!important` is needed. */
+@media (min-width: 48rem) {
+  html[data-sidebar='collapsed'] .sidebar-rail {
+    display: none;
+  }
+
+  html[data-sidebar='collapsed'] .sidebar-offset {
+    padding-left: 0;
+  }
 }
 
 body {
   @apply bg-canvas text-ink antialiased;
+  /* So flipping the theme reads as a considered shift, not a flash. */
+  transition: background-color 200ms ease-out, color 200ms ease-out;
 }
 
 /* Consistent visible focus for keyboard users across all interactive elements. */
@@ -60,7 +144,7 @@ input:focus-visible,
 select:focus-visible,
 textarea:focus-visible,
 [tabindex]:focus-visible {
-  outline: 2px solid theme('colors.accent');
+  outline: 2px solid var(--color-accent);
   outline-offset: 2px;
   border-radius: 4px;
 }
@@ -72,15 +156,22 @@ textarea:focus-visible,
   left: 1rem;
   z-index: 50;
   border-radius: 0.5rem;
-  background: theme('colors.accent');
+  background: var(--color-accent);
   padding: 0.5rem 1rem;
-  font-size: theme('fontSize.sm');
+  font-size: 0.875rem;
   font-weight: 600;
   color: #ffffff;
 }
 
 .skip-link:focus {
   top: 0.75rem;
+}
+
+/* Accent bloom on the verdict dial. A filter takes a colour, not a box-shadow
+   value, so this one keeps its own literal — still inside this file, which is
+   the only place colour is allowed to live. */
+.dial-glow {
+  filter: drop-shadow(0 0 8px var(--bloom));
 }
 
 /* Micro-interactions: gentle entrances, disabled under reduced motion. */
@@ -96,8 +187,18 @@ textarea:focus-visible,
 }
 
 .animate-fade-up {
-  animation: dd-fade-up 200ms ease-out both;
+  /* `forwards`, never `both`: with `both` the pre-start frame (opacity 0) is
+     applied whenever the animation has not advanced yet, so a stalled or
+     throttled animation (background tab, non-composited WebView) can leave
+     content permanently invisible. Forwards keeps the element's own style as
+     the resting state and only animates once it actually runs. */
+  animation: dd-fade-up 200ms ease-out forwards;
 }
+
+/* NOTE: there are deliberately no grow-in keyframes here. Animating a bar
+   from scale 0 means that whenever the animation has not advanced (throttled
+   or non-composited WebViews), the chart renders empty. Bars carry
+   width/height *transitions* instead, whose resting state is the real value. */
 
 @media (prefers-reduced-motion: reduce) {
   .animate-fade-up {

@@ -38,13 +38,15 @@ export function ToastProvider({ children }: { children: ReactNode }) {
   return (
     <ToastContext.Provider value={value}>
       {children}
+      {/* Sits above the mobile bottom nav (56px + safe area) so a toast never
+          buries the navigation, then returns to the corner on desktop. */}
       <div
         aria-live="polite"
-        className="pointer-events-none fixed inset-x-0 bottom-4 z-40 flex flex-col items-center gap-2 px-4"
+        className="pointer-events-none fixed inset-x-0 bottom-24 z-40 flex flex-col items-center gap-2 px-4 md:bottom-4"
       >
         {toasts.map((toast) => (          <div
             key={toast.id}
-            className="animate-fade-up pointer-events-auto flex items-center gap-4 rounded-xl border border-hairline bg-surface-low px-4 py-3 shadow-[0_20px_50px_rgba(0,0,0,0.65)] backdrop-blur"
+            className="animate-fade-up pointer-events-auto flex items-center gap-4 rounded-xl border border-hairline bg-surface-low px-4 py-3 shadow-float backdrop-blur"
           >
             <p className="text-sm text-ink">{toast.message}</p>
             {toast.actionLabel && toast.onAction && (
