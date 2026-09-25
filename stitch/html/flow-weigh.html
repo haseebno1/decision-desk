@@ -1,0 +1,418 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head><meta charset="utf-8"/><meta content="width=device-width, initial-scale=1.0" name="viewport"/><meta content="web_dashboard" name="shell-type"/><link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/><style>@layer base { html, body { margin: 0; padding: 0; } body { overscroll-behavior: none; } main > :first-child { margin-top: 0 !important; } main > :last-child { margin-bottom: 0 !important; } } ::-webkit-scrollbar { display: none; }</style><script src="https://cdn.tailwindcss.com"></script><script id="tailwind-config">tailwind.config = { darkMode: "class", theme: { extend: { "colors": { "surface-bright": "#3a383e", "surface-tint": "#d0bcff", "on-tertiary-container": "#2d263c", "tertiary-fixed": "#e9defb", "on-tertiary-fixed-variant": "#4a435a", "inverse-on-surface": "#312f35", "on-secondary-container": "#b8b3bf", "secondary-fixed-dim": "#cac4d1", "on-primary-container": "#340080", "background": "#141318", "secondary": "#cac4d1", "tertiary-container": "#958da7", "on-secondary-fixed-variant": "#484550", "on-background": "#e6e1e9", "surface-container-highest": "#36343a", "on-primary-fixed-variant": "#5516be", "on-tertiary-fixed": "#1e182d", "secondary-container": "#484550", "error": "#ffb4ab", "on-error-container": "#ffdad6", "surface-container-high": "#2b292f", "on-primary": "#3c0091", "primary-container": "#a078ff", "error-container": "#93000a", "tertiary": "#ccc2de", "outline-variant": "#494454", "secondary-fixed": "#e6e0ed", "on-surface": "#e6e1e9", "surface-container": "#201f24", "on-surface-variant": "#cbc3d7", "tertiary-fixed-dim": "#ccc2de", "surface-container-low": "#1c1b20", "surface-variant": "#36343a", "surface-dim": "#141318", "inverse-surface": "#e6e1e9", "on-error": "#690005", "primary-fixed-dim": "#d0bcff", "on-primary-fixed": "#23005c", "on-secondary": "#312f39", "primary-fixed": "#e9ddff", "inverse-primary": "#6d3bd7", "outline": "#958ea0", "on-secondary-fixed": "#1c1a23", "primary": "#d0bcff", "on-tertiary": "#332d43", "surface": "#141318", "surface-container-lowest": "#0f0d13" }, "borderRadius": { "DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px" }, "spacing": { "margin": "3rem", "space-md": "1rem", "space-xs": "0.25rem", "space-xl": "2.5rem", "gutter": "1.5rem", "space-lg": "1.5rem", "space-sm": "0.5rem", "margin-mobile": "1.25rem", "gutter-mobile": "1rem" }, "fontFamily": { "editorial-quote": [ "Newsreader" ], "headline-lg": [ "Geist" ], "label-code": [ "JetBrains Mono" ], "body-lg": [ "Geist" ], "label-key": [ "JetBrains Mono" ], "body-sm": [ "Geist" ], "display-hero": [ "Geist" ], "headline-md": [ "Geist" ], "display-hero-mobile": [ "Geist" ] }, "fontSize": { "editorial-quote": [ "22px", { "lineHeight": "34px", "letterSpacing": "-0.01em", "fontWeight": "400" } ], "headline-lg": [ "32px", { "lineHeight": "40px", "letterSpacing": "-0.03em", "fontWeight": "600" } ], "label-code": [ "12px", { "lineHeight": "16px", "letterSpacing": "0.02em", "fontWeight": "500" } ], "body-lg": [ "16px", { "lineHeight": "26px", "letterSpacing": "-0.01em", "fontWeight": "400" } ], "label-key": [ "11px", { "lineHeight": "14px", "letterSpacing": "0.04em", "fontWeight": "600" } ], "body-sm": [ "14px", { "lineHeight": "22px", "letterSpacing": "0em", "fontWeight": "400" } ], "display-hero": [ "56px", { "lineHeight": "64px", "letterSpacing": "-0.04em", "fontWeight": "600" } ], "headline-md": [ "24px", { "lineHeight": "32px", "letterSpacing": "-0.02em", "fontWeight": "500" } ], "display-hero-mobile": [ "36px", { "lineHeight": "44px", "letterSpacing": "-0.03em", "fontWeight": "600" } ] } } } };</script></head><body class="bg-surface font-body-sm text-body-sm text-on-surface antialiased"><aside class="fixed left-0 top-0 h-full w-64 bg-surface-container-lowest z-50 flex flex-col justify-between"><div class="flex flex-col"><div class="h-16 px-space-lg flex items-center gap-space-sm"><img alt="DFK Calm Intelligence Logo" class="h-8 w-auto object-contain" src="https://lh3.googleusercontent.com/aida/AEtjO1Vatn8s4UzQ2gABU8MORT8IyJgdmFUXVsUmiyd7crRXncIJJspgWqizDMd_ui5rbB_Gb0_mbQ3sWt6D72lqecXFIDfByU9DEERpWj95CSz51TX-afcwLX9cSLpnvlIDDDGc-c6UIuEDobPjiJAiVN2K7qkRZGy3YenxJKveToLT0YD4okXzwwmnvcwqRMtoMq-aqA_H8phlG3KatIbai3HVa4iN4MFOSlCOdGO07FSWkhw7mZzWXChkjQ"/><div class="flex flex-col"><span class="font-headline-md text-body-sm font-semibold tracking-tight text-on-surface leading-tight">DFK</span><span class="font-label-code text-label-code text-on-surface-variant uppercase tracking-wider">Calm Intelligence</span></div></div><div class="px-space-md py-space-sm"><nav class="space-y-space-xs" data-active-classes="bg-surface-container-high text-on-surface font-semibold"><a class="flex items-center gap-space-sm px-space-md py-space-sm rounded-lg text-on-surface-variant hover:bg-surface-container hover:text-on-surface transition-colors" data-path="home" href="#"><span class="material-symbols-outlined text-[18px]">radio_button_checked</span><span class="font-body-sm text-body-sm">Home</span></a><a aria-current="page" class="flex items-center gap-space-sm px-space-md py-space-sm rounded-lg transition-colors bg-surface-container-high text-on-surface font-semibold" data-path="decisions" href="#"><span class="material-symbols-outlined text-[18px]">diamond</span><span class="font-body-sm text-body-sm">Decisions</span></a><a class="flex items-center gap-space-sm px-space-md py-space-sm rounded-lg text-on-surface-variant hover:bg-surface-container hover:text-on-surface transition-colors" data-path="patterns" href="#"><span class="material-symbols-outlined text-[18px]">progress_activity</span><span class="font-body-sm text-body-sm">Patterns</span></a></nav></div><div class="my-space-sm mx-space-md h-px bg-surface-container-highest"></div><div class="px-space-md py-space-xs"><nav class="space-y-space-xs" data-active-classes="bg-surface-container-high text-on-surface font-semibold"><a class="flex items-center gap-space-sm px-space-md py-space-sm rounded-lg text-on-surface-variant hover:bg-surface-container hover:text-on-surface transition-colors" data-path="settings" href="#"><span class="material-symbols-outlined text-[18px]">settings</span><span class="font-body-sm text-body-sm">Settings</span></a><a class="flex items-center gap-space-sm px-space-md py-space-sm rounded-lg text-on-surface-variant hover:bg-surface-container hover:text-on-surface transition-colors" data-path="help-docs" href="#"><span class="material-symbols-outlined text-[18px]">help</span><span class="font-body-sm text-body-sm">Help &amp; Docs</span></a></nav></div></div><div class="p-space-md bg-surface-container-lowest"><div class="flex items-center justify-between px-space-md py-space-sm rounded-lg bg-surface-container-low"><div class="flex items-center gap-space-sm"><div class="w-2 h-2 rounded-full bg-surface-tint shadow-[0_0_8px_#d0bcff]"></div><span class="font-label-code text-label-code text-on-surface-variant font-medium">AH · Local data</span></div><span class="material-symbols-outlined text-outline text-[16px]">lock</span></div></div></aside><div class="pl-64"><header class="fixed top-0 left-64 right-0 h-16 bg-surface/80 backdrop-blur-xl z-40 flex items-center justify-between px-space-lg shadow-[0_1px_8px_rgba(0,0,0,0.04)]"><div class="flex items-center gap-space-sm"><img alt="DFK Calm Intelligence Logo" class="h-8 w-auto object-contain" src="https://lh3.googleusercontent.com/aida/AEtjO1Vatn8s4UzQ2gABU8MORT8IyJgdmFUXVsUmiyd7crRXncIJJspgWqizDMd_ui5rbB_Gb0_mbQ3sWt6D72lqecXFIDfByU9DEERpWj95CSz51TX-afcwLX9cSLpnvlIDDDGc-c6UIuEDobPjiJAiVN2K7qkRZGy3YenxJKveToLT0YD4okXzwwmnvcwqRMtoMq-aqA_H8phlG3KatIbai3HVa4iN4MFOSlCOdGO07FSWkhw7mZzWXChkjQ"/><div class="flex items-center gap-space-xs text-on-surface-variant font-label-code text-label-code"><span class="hover:text-on-surface transition-colors cursor-pointer">DFK</span><span class="text-outline">/</span><span class="text-on-surface font-semibold">Decisions</span></div></div><div class="flex items-center gap-space-md"><button class="flex items-center gap-space-lg bg-surface-container-low px-space-md py-space-xs rounded-lg text-on-surface-variant hover:text-on-surface transition-all" type="button"><div class="flex items-center gap-space-xs"><span class="material-symbols-outlined text-[16px]">search</span><span class="font-body-sm text-body-sm text-on-surface-variant">Search or jump to...</span></div><kbd class="bg-surface-container px-space-xs py-0.5 rounded text-on-surface-variant font-label-key text-label-key">⌘K</kbd></button><button class="flex items-center gap-space-xs bg-primary text-on-primary font-body-sm text-body-sm font-semibold px-space-md py-space-xs rounded-lg shadow-[0_0_24px_rgba(208,188,255,0.25)] hover:bg-primary-container hover:text-on-primary-container transition-all" type="button"><span class="material-symbols-outlined text-[18px]">add</span><span>New Decision</span></button><div class="w-8 h-8 rounded-full bg-primary flex items-center justify-center"><span class="material-symbols-outlined text-on-primary text-[18px]">person</span></div></div></header><main class="w-full pt-16 bg-surface min-h-screen px-space-lg py-space-xl"><div class="flex flex-col w-full max-w-6xl mx-auto space-y-space-xl pb-16">
+<!-- Stepper Header -->
+<div class="flex flex-col space-y-space-md">
+<div class="flex items-center justify-between">
+<span class="font-label-code text-label-code uppercase tracking-wider text-surface-tint flex items-center gap-space-xs">
+<span class="w-1.5 h-1.5 rounded-full bg-primary animate-pulse shadow-[0_0_8px_#d0bcff]"></span>
+        Active Process · Step 03 of 05
+      </span>
+<span class="font-label-code text-label-code text-on-surface-variant flex items-center gap-space-sm">
+<span>Session ID:</span>
+<span class="bg-surface-container-high px-space-xs py-0.5 rounded text-secondary">DEC-8924</span>
+</span>
+</div>
+<!-- Stepper Track -->
+<div class="grid grid-cols-5 gap-space-sm items-center py-space-sm">
+<!-- Step 1: Define -->
+<div class="flex flex-col gap-space-xs group cursor-pointer">
+<div class="flex items-center justify-between text-on-surface-variant">
+<span class="font-label-code text-label-code text-secondary font-medium">01 DEFINE</span>
+<span class="material-symbols-outlined text-primary text-[14px]">check_circle</span>
+</div>
+<div class="h-1 rounded-full bg-primary/40"></div>
+</div>
+<!-- Step 2: Clarify -->
+<div class="flex flex-col gap-space-xs group cursor-pointer">
+<div class="flex items-center justify-between text-on-surface-variant">
+<span class="font-label-code text-label-code text-secondary font-medium">02 CLARIFY</span>
+<span class="material-symbols-outlined text-primary text-[14px]">check_circle</span>
+</div>
+<div class="h-1 rounded-full bg-primary/40"></div>
+</div>
+<!-- Step 3: Weigh (Active) -->
+<div class="flex flex-col gap-space-xs">
+<div class="flex items-center justify-between text-on-surface">
+<span class="font-label-code text-label-code text-primary font-bold flex items-center gap-1.5">
+            03 WEIGH
+            <span class="w-1.5 h-1.5 rounded-full bg-primary shadow-[0_0_8px_#d0bcff]"></span>
+</span>
+<span class="font-label-key text-label-key bg-primary/20 text-primary px-1.5 py-0.5 rounded">NOW</span>
+</div>
+<div class="h-1 rounded-full bg-primary shadow-[0_0_12px_rgba(208,188,255,0.8)]"></div>
+</div>
+<!-- Step 4: Compare -->
+<div class="flex flex-col gap-space-xs opacity-50">
+<div class="flex items-center justify-between text-on-surface-variant">
+<span class="font-label-code text-label-code">04 COMPARE</span>
+<span class="material-symbols-outlined text-[14px] text-outline">lock</span>
+</div>
+<div class="h-1 rounded-full bg-surface-container-highest"></div>
+</div>
+<!-- Step 5: Decide -->
+<div class="flex flex-col gap-space-xs opacity-50">
+<div class="flex items-center justify-between text-on-surface-variant">
+<span class="font-label-code text-label-code">05 DECIDE</span>
+<span class="material-symbols-outlined text-[14px] text-outline">lock</span>
+</div>
+<div class="h-1 rounded-full bg-surface-container-highest"></div>
+</div>
+</div>
+</div>
+<!-- Main Interaction Space (8:4 Split Grid) -->
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-space-lg items-start">
+<!-- Primary Flow Column (8 Cols) -->
+<div class="lg:col-span-8 flex flex-col space-y-space-lg">
+<!-- Editorial Title Banner -->
+<div class="bg-surface-container-low rounded-xl p-space-lg relative overflow-hidden shadow-sm">
+<div class="absolute -right-8 -top-8 w-44 h-44 rounded-full bg-primary/10 blur-3xl pointer-events-none"></div>
+<div class="relative z-10 flex flex-col space-y-space-xs">
+<div class="flex items-center gap-space-sm text-surface-tint">
+<span class="material-symbols-outlined text-[20px]">balance</span>
+<span class="font-label-code text-label-code uppercase tracking-wider font-semibold">Priority Calibration</span>
+</div>
+<h1 class="font-headline-lg text-headline-lg text-on-surface">What matters most?</h1>
+<p class="font-editorial-quote text-editorial-quote text-on-surface-variant max-w-xl italic">
+            “Not everything deserves equal weight. Calibrate your true priorities before evaluating options.”
+          </p>
+</div>
+</div>
+<!-- Criteria Weights Stack -->
+<div class="flex flex-col space-y-space-md" id="criteria-container">
+<!-- Criterion 1: Growth & Learning -->
+<div class="bg-surface-container-low rounded-xl p-space-lg flex flex-col space-y-space-md transition-all duration-200 hover:bg-surface-container">
+<div class="flex items-start justify-between">
+<div class="flex items-center gap-space-sm">
+<div class="w-8 h-8 rounded-lg bg-surface-container-highest flex items-center justify-center text-primary">
+<span class="material-symbols-outlined text-[18px]">trending_up</span>
+</div>
+<div class="flex flex-col">
+<span class="font-headline-md text-body-lg font-semibold text-on-surface">Growth &amp; Learning</span>
+<span class="font-label-code text-label-code text-on-surface-variant">Skill trajectory, mentorship &amp; challenge</span>
+</div>
+</div>
+<div class="flex items-center gap-space-xs bg-surface-container-highest px-space-sm py-1 rounded-lg">
+<span class="w-2 h-2 rounded-full bg-primary"></span>
+<span class="font-label-key text-label-key text-on-surface font-semibold criterion-val-text" id="val-1">5 / 5 (Critical)</span>
+</div>
+</div>
+<!-- Slider Track Primitive -->
+<div class="flex flex-col space-y-space-xs pt-space-xs">
+<div class="relative flex items-center w-full select-none touch-none h-6">
+<input class="w-full h-1.5 bg-surface-container-highest rounded-lg appearance-none cursor-pointer accent-[#d0bcff] focus:outline-none" data-id="1" max="5" min="1" oninput="updateWeight(1, this.value)" type="range" value="5"/>
+</div>
+<div class="flex justify-between items-center text-outline font-label-code text-label-code px-0.5">
+<span>Less important</span>
+<div class="flex gap-4 text-outline-variant font-label-key text-label-key">
+<span>1</span>
+<span>2</span>
+<span>3</span>
+<span>4</span>
+<span class="text-primary font-bold">5</span>
+</div>
+<span class="text-surface-tint">Critical</span>
+</div>
+</div>
+</div>
+<!-- Criterion 2: Schedule Flexibility & Autonomy -->
+<div class="bg-surface-container-low rounded-xl p-space-lg flex flex-col space-y-space-md transition-all duration-200 hover:bg-surface-container">
+<div class="flex items-start justify-between">
+<div class="flex items-center gap-space-sm">
+<div class="w-8 h-8 rounded-lg bg-surface-container-highest flex items-center justify-center text-surface-tint">
+<span class="material-symbols-outlined text-[18px]">schedule</span>
+</div>
+<div class="flex flex-col">
+<span class="font-headline-md text-body-lg font-semibold text-on-surface">Schedule Flexibility &amp; Autonomy</span>
+<span class="font-label-code text-label-code text-on-surface-variant">Asynchronous deep work, time ownership</span>
+</div>
+</div>
+<div class="flex items-center gap-space-xs bg-surface-container-highest px-space-sm py-1 rounded-lg">
+<span class="w-2 h-2 rounded-full bg-primary-container"></span>
+<span class="font-label-key text-label-key text-on-surface font-semibold criterion-val-text" id="val-2">4 / 5 (Important)</span>
+</div>
+</div>
+<div class="flex flex-col space-y-space-xs pt-space-xs">
+<div class="relative flex items-center w-full select-none touch-none h-6">
+<input class="w-full h-1.5 bg-surface-container-highest rounded-lg appearance-none cursor-pointer accent-[#d0bcff] focus:outline-none" data-id="2" max="5" min="1" oninput="updateWeight(2, this.value)" type="range" value="4"/>
+</div>
+<div class="flex justify-between items-center text-outline font-label-code text-label-code px-0.5">
+<span>Less important</span>
+<div class="flex gap-4 text-outline-variant font-label-key text-label-key">
+<span>1</span>
+<span>2</span>
+<span>3</span>
+<span class="text-primary font-bold">4</span>
+<span>5</span>
+</div>
+<span class="text-surface-tint">Critical</span>
+</div>
+</div>
+</div>
+<!-- Criterion 3: Base Compensation & Upside -->
+<div class="bg-surface-container-low rounded-xl p-space-lg flex flex-col space-y-space-md transition-all duration-200 hover:bg-surface-container">
+<div class="flex items-start justify-between">
+<div class="flex items-center gap-space-sm">
+<div class="w-8 h-8 rounded-lg bg-surface-container-highest flex items-center justify-center text-secondary">
+<span class="material-symbols-outlined text-[18px]">payments</span>
+</div>
+<div class="flex flex-col">
+<span class="font-headline-md text-body-lg font-semibold text-on-surface">Base Compensation &amp; Upside</span>
+<span class="font-label-code text-label-code text-on-surface-variant">Guaranteed cash, bonus predictability, equity</span>
+</div>
+</div>
+<div class="flex items-center gap-space-xs bg-surface-container-highest px-space-sm py-1 rounded-lg">
+<span class="w-2 h-2 rounded-full bg-outline"></span>
+<span class="font-label-key text-label-key text-on-surface font-semibold criterion-val-text" id="val-3">3 / 5 (Moderate)</span>
+</div>
+</div>
+<div class="flex flex-col space-y-space-xs pt-space-xs">
+<div class="relative flex items-center w-full select-none touch-none h-6">
+<input class="w-full h-1.5 bg-surface-container-highest rounded-lg appearance-none cursor-pointer accent-[#d0bcff] focus:outline-none" data-id="3" max="5" min="1" oninput="updateWeight(3, this.value)" type="range" value="3"/>
+</div>
+<div class="flex justify-between items-center text-outline font-label-code text-label-code px-0.5">
+<span>Less important</span>
+<div class="flex gap-4 text-outline-variant font-label-key text-label-key">
+<span>1</span>
+<span>2</span>
+<span class="text-primary font-bold">3</span>
+<span>4</span>
+<span>5</span>
+</div>
+<span class="text-surface-tint">Critical</span>
+</div>
+</div>
+</div>
+<!-- Criterion 4: Culture & Stability -->
+<div class="bg-surface-container-low rounded-xl p-space-lg flex flex-col space-y-space-md transition-all duration-200 hover:bg-surface-container">
+<div class="flex items-start justify-between">
+<div class="flex items-center gap-space-sm">
+<div class="w-8 h-8 rounded-lg bg-surface-container-highest flex items-center justify-center text-secondary">
+<span class="material-symbols-outlined text-[18px]">shield</span>
+</div>
+<div class="flex flex-col">
+<span class="font-headline-md text-body-lg font-semibold text-on-surface">Culture &amp; Stability</span>
+<span class="font-label-code text-label-code text-on-surface-variant">Psychological safety, team tenure, runway</span>
+</div>
+</div>
+<div class="flex items-center gap-space-xs bg-surface-container-highest px-space-sm py-1 rounded-lg">
+<span class="w-2 h-2 rounded-full bg-outline-variant"></span>
+<span class="font-label-key text-label-key text-on-surface font-semibold criterion-val-text" id="val-4">2 / 5 (Low)</span>
+</div>
+</div>
+<div class="flex flex-col space-y-space-xs pt-space-xs">
+<div class="relative flex items-center w-full select-none touch-none h-6">
+<input class="w-full h-1.5 bg-surface-container-highest rounded-lg appearance-none cursor-pointer accent-[#d0bcff] focus:outline-none" data-id="4" max="5" min="1" oninput="updateWeight(4, this.value)" type="range" value="2"/>
+</div>
+<div class="flex justify-between items-center text-outline font-label-code text-label-code px-0.5">
+<span>Less important</span>
+<div class="flex gap-4 text-outline-variant font-label-key text-label-key">
+<span>1</span>
+<span class="text-primary font-bold">2</span>
+<span>3</span>
+<span>4</span>
+<span>5</span>
+</div>
+<span class="text-surface-tint">Critical</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Add Custom Criterion Action -->
+<button class="w-full py-space-md rounded-xl bg-surface-container-lowest hover:bg-surface-container-low transition-all text-on-surface-variant hover:text-on-surface flex items-center justify-center gap-space-sm font-label-code text-label-code group" onclick="addCriterionPrompt()" type="button">
+<span class="material-symbols-outlined text-[18px] text-surface-tint group-hover:scale-110 transition-transform">add_circle</span>
+<span>Add custom criterion</span>
+<kbd class="bg-surface-container px-space-xs py-0.5 rounded text-outline font-label-key text-label-key">C</kbd>
+</button>
+<!-- Bottom Decision Flow Navigation -->
+<div class="pt-space-md flex items-center justify-between">
+<button class="flex items-center gap-space-xs px-space-md py-space-sm rounded-lg text-on-surface-variant hover:bg-surface-container hover:text-on-surface transition-all font-body-sm text-body-sm" type="button">
+<span class="material-symbols-outlined text-[16px]">arrow_back</span>
+<span>Back to Clarify</span>
+</button>
+<button class="flex items-center gap-space-sm bg-primary text-on-primary font-body-sm text-body-sm font-semibold px-space-lg py-space-sm rounded-lg shadow-[0_0_24px_rgba(208,188,255,0.35)] hover:bg-primary-container hover:text-on-primary-container transition-all" type="button">
+<span>Continue to Compare Options</span>
+<span class="material-symbols-outlined text-[18px]">arrow_forward</span>
+<kbd class="bg-on-primary/20 text-on-primary px-1.5 py-0.5 rounded text-[10px] font-label-key tracking-wider">⌘↵</kbd>
+</button>
+</div>
+</div>
+<!-- Side Context Rail (4 Cols) -->
+<div class="lg:col-span-4 flex flex-col space-y-space-md">
+<!-- Decision Snapshot Container -->
+<div class="bg-surface-container-lowest rounded-xl p-space-md flex flex-col space-y-space-md shadow-sm">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-space-xs text-on-surface-variant">
+<span class="material-symbols-outlined text-[16px] text-surface-tint">quick_reference_all</span>
+<span class="font-label-code text-label-code uppercase tracking-wider font-semibold">Active Snapshot</span>
+</div>
+<span class="font-label-key text-label-key bg-surface-container px-space-xs py-0.5 rounded text-secondary">Step 02 Synced</span>
+</div>
+<!-- Options Under Evaluation -->
+<div class="flex flex-col space-y-space-xs">
+<span class="font-label-key text-label-key text-outline uppercase tracking-wider">Evaluating Between</span>
+<div class="grid grid-cols-1 gap-space-xs">
+<div class="bg-surface-container-low p-space-sm rounded-lg flex items-center justify-between">
+<div class="flex items-center gap-space-sm">
+<span class="w-5 h-5 rounded-full bg-primary/20 text-primary flex items-center justify-center font-label-key text-label-key font-bold">A</span>
+<span class="font-body-sm text-body-sm font-medium text-on-surface">New Job Offer at Acme</span>
+</div>
+<span class="material-symbols-outlined text-[14px] text-surface-tint">flag</span>
+</div>
+<div class="bg-surface-container-low p-space-sm rounded-lg flex items-center justify-between">
+<div class="flex items-center gap-space-sm">
+<span class="w-5 h-5 rounded-full bg-surface-container-high text-on-surface-variant flex items-center justify-center font-label-key text-label-key font-bold">B</span>
+<span class="font-body-sm text-body-sm font-medium text-secondary">Stay in Current Role</span>
+</div>
+<span class="material-symbols-outlined text-[14px] text-outline">replay</span>
+</div>
+</div>
+</div>
+<!-- Answers from Clarify Phase -->
+<div class="flex flex-col space-y-space-sm pt-space-xs">
+<span class="font-label-key text-label-key text-outline uppercase tracking-wider">Step 02 Answers (Locked)</span>
+<!-- Q1 Clarification -->
+<div class="bg-surface-container-low p-space-sm rounded-lg flex flex-col space-y-1">
+<span class="font-label-code text-label-code text-on-surface-variant">Q1: Is this decision reversible?</span>
+<div class="flex items-center gap-space-xs text-on-surface">
+<span class="material-symbols-outlined text-[16px] text-primary">door_front</span>
+<span class="font-body-sm text-body-sm font-medium">Yes, mostly (Two-way door)</span>
+</div>
+<span class="font-label-key text-label-key text-outline">Low cost of exit, reversible within 90 days</span>
+</div>
+<!-- Q2 Clarification -->
+<div class="bg-surface-container-low p-space-sm rounded-lg flex flex-col space-y-1">
+<span class="font-label-code text-label-code text-on-surface-variant">Q2: What is downside if wrong?</span>
+<div class="flex items-center gap-space-xs text-on-surface">
+<span class="material-symbols-outlined text-[16px] text-surface-tint">verified_user</span>
+<span class="font-body-sm text-body-sm font-medium">Manageable setback</span>
+</div>
+<span class="font-label-key text-label-key text-outline">Career narrative remains solid, 6mo reserve</span>
+</div>
+</div>
+<!-- Weight Distribution Radar Simulation -->
+<div class="pt-space-xs flex flex-col space-y-space-xs">
+<span class="font-label-key text-label-key text-outline uppercase tracking-wider">Weight Balance Visualizer</span>
+<div class="bg-surface-container-low p-space-sm rounded-lg flex flex-col items-center justify-center">
+<!-- Inline SVG mini radar/pentagon visualization -->
+<svg class="w-36 h-36 text-primary" fill="none" viewbox="0 0 100 100">
+<!-- Grid web -->
+<polygon points="50,15 85,38 72,80 28,80 15,38" stroke="currentColor" stroke-opacity="0.15" stroke-width="1"></polygon>
+<polygon points="50,27 74,43 65,72 35,72 26,43" stroke="currentColor" stroke-opacity="0.25" stroke-width="1"></polygon>
+<line stroke="currentColor" stroke-opacity="0.2" stroke-width="0.75" x1="50" x2="50" y1="50" y2="15"></line>
+<line stroke="currentColor" stroke-opacity="0.2" stroke-width="0.75" x1="50" x2="85" y1="50" y2="38"></line>
+<line stroke="currentColor" stroke-opacity="0.2" stroke-width="0.75" x1="50" x2="72" y1="50" y2="80"></line>
+<line stroke="currentColor" stroke-opacity="0.2" stroke-width="0.75" x1="50" x2="28" y1="50" y2="80"></line>
+<line stroke="currentColor" stroke-opacity="0.2" stroke-width="0.75" x1="50" x2="15" y1="50" y2="38"></line>
+<!-- Value area representing 5, 4, 3, 2, 4 -->
+<polygon fill="currentColor" fill-opacity="0.28" id="radar-shape" points="50,15 78,41 62,68 39,66 22,40" stroke="currentColor" stroke-width="1.75"></polygon>
+<!-- Points -->
+<circle cx="50" cy="15" fill="#d0bcff" r="2.5"></circle>
+<circle cx="78" cy="41" fill="#d0bcff" r="2.5"></circle>
+<circle cx="62" cy="68" fill="#d0bcff" r="2.5"></circle>
+<circle cx="39" cy="66" fill="#d0bcff" r="2.5"></circle>
+<circle cx="22" cy="40" fill="#d0bcff" r="2.5"></circle>
+</svg>
+<div class="flex items-center justify-between w-full mt-2 font-label-code text-label-code text-on-surface-variant">
+<span>Growth Dominant</span>
+<span class="text-surface-tint">Σ 14 pts</span>
+</div>
+</div>
+</div>
+<!-- Method Principle Callout -->
+<div class="p-space-sm rounded-lg bg-surface-container-high/40 flex items-start gap-space-xs">
+<span class="material-symbols-outlined text-[16px] text-surface-tint shrink-0 mt-0.5">tips_and_updates</span>
+<p class="font-body-sm text-body-sm text-secondary leading-snug">
+            Assigning top weight to &gt;2 items introduces cognitive gridlock. Prioritize ruthlessly.
+          </p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<script>
+  const labels = {
+    1: '1 / 5 (Minimal)',
+    2: '2 / 5 (Low)',
+    3: '3 / 5 (Moderate)',
+    4: '4 / 5 (Important)',
+    5: '5 / 5 (Critical)'
+  };
+
+  function updateWeight(id, val) {
+    const textEl = document.getElementById(`val-${id}`);
+    if (textEl) {
+      textEl.innerText = labels[val] || `${val} / 5`;
+    }
+  }
+
+  function addCriterionPrompt() {
+    const name = prompt("Enter new criterion name (e.g., Relocation Overhead, Commute Time):");
+    if (!name) return;
+
+    const container = document.getElementById('criteria-container');
+    const newId = Date.now();
+    const div = document.createElement('div');
+    div.className = "bg-surface-container-low rounded-xl p-space-lg flex flex-col space-y-space-md transition-all duration-200 hover:bg-surface-container";
+    div.innerHTML = `
+      <div class="flex items-start justify-between">
+        <div class="flex items-center gap-space-sm">
+          <div class="w-8 h-8 rounded-lg bg-surface-container-highest flex items-center justify-center text-primary">
+            <span class="material-symbols-outlined text-[18px]">adjust</span>
+          </div>
+          <div class="flex flex-col">
+            <span class="font-headline-md text-body-lg font-semibold text-on-surface">${escapeHtml(name)}</span>
+            <span class="font-label-code text-label-code text-on-surface-variant">Custom weighted attribute</span>
+          </div>
+        </div>
+        <div class="flex items-center gap-space-xs bg-surface-container-highest px-space-sm py-1 rounded-lg">
+          <span class="w-2 h-2 rounded-full bg-outline"></span>
+          <span class="font-label-key text-label-key text-on-surface font-semibold criterion-val-text" id="val-${newId}">3 / 5 (Moderate)</span>
+        </div>
+      </div>
+      <div class="flex flex-col space-y-space-xs pt-space-xs">
+        <div class="relative flex items-center w-full select-none touch-none h-6">
+          <input type="range" min="1" max="5" value="3" data-id="${newId}"
+            class="w-full h-1.5 bg-surface-container-highest rounded-lg appearance-none cursor-pointer accent-[#d0bcff] focus:outline-none"
+            oninput="updateWeight('${newId}', this.value)" />
+        </div>
+        <div class="flex justify-between items-center text-outline font-label-code text-label-code px-0.5">
+          <span>Less important</span>
+          <div class="flex gap-4 text-outline-variant font-label-key text-label-key">
+            <span>1</span>
+            <span>2</span>
+            <span class="text-primary font-bold">3</span>
+            <span>4</span>
+            <span>5</span>
+          </div>
+          <span class="text-surface-tint">Critical</span>
+        </div>
+      </div>
+    `;
+    container.appendChild(div);
+  }
+
+  function escapeHtml(string) {
+    const entityMap = {
+      '&': '&amp;',
+      '<': '&lt;',
+      '>': '&gt;',
+      '"': '&quot;',
+      "'": '&#39;'
+    };
+    return String(string).replace(/[&<>"']/g, function (s) {
+      return entityMap[s];
+    });
+  }
+
+  // Keyboard shortcut listener: Cmd/Ctrl + Enter
+  document.addEventListener('keydown', function(e) {
+    if ((e.metaKey || e.ctrlKey) && e.key === 'Enter') {
+      alert('Advancing to Step 04: Compare Options');
+    }
+    if (e.key.toLowerCase() === 'c' && !['INPUT', 'TEXTAREA'].includes(document.activeElement.tagName)) {
+      addCriterionPrompt();
+    }
+  });
+</script></main></div></body></html>

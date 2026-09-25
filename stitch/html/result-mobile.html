@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head><meta charset="utf-8"/><meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" name="viewport"/><meta content="mobile_stack" name="shell-type"/><link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"/><link href="https://fonts.googleapis.com" rel="preconnect"/><link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/><link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600&amp;family=JetBrains+Mono:wght@500;600&amp;family=Newsreader:ital,wght@0,400;1,400&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/><script src="https://cdn.tailwindcss.com"></script><script id="tailwind-config">tailwind.config = { darkMode: "class", theme: { extend: { colors: { "error-container": "#93000a", "surface-dim": "#141318", "on-primary-fixed": "#23005c", "on-tertiary": "#332d43", "surface-container-low": "#1c1b20", "surface-bright": "#3a383e", "secondary": "#cac4d1", "surface": "#141318", "tertiary-fixed-dim": "#ccc2de", "surface-container": "#201f24", "on-secondary-container": "#b8b3bf", "on-secondary-fixed": "#1c1a23", "outline": "#958ea0", "on-secondary": "#312f39", "outline-variant": "#494454", "secondary-fixed": "#e6e0ed", "inverse-primary": "#6d3bd7", "secondary-fixed-dim": "#cac4d1", "on-primary-container": "#340080", "on-surface-variant": "#cbc3d7", "surface-container-lowest": "#0f0d13", "inverse-on-surface": "#312f35", "background": "#141318", "on-tertiary-container": "#2d263c", "primary-fixed-dim": "#d0bcff", "surface-container-highest": "#36343a", "primary": "#d0bcff", "on-tertiary-fixed": "#1e182d", "on-secondary-fixed-variant": "#484550", "on-primary": "#3c0091", "tertiary": "#ccc2de", "on-primary-fixed-variant": "#5516be", "primary-container": "#a078ff", "primary-fixed": "#e9ddff", "surface-variant": "#36343a", "error": "#ffb4ab", "secondary-container": "#484550", "on-background": "#e6e1e9", "surface-tint": "#d0bcff", "on-surface": "#e6e1e9", "on-error-container": "#ffdad6", "on-tertiary-fixed-variant": "#4a435a", "tertiary-fixed": "#e9defb", "surface-container-high": "#2b292f", "inverse-surface": "#e6e1e9", "on-error": "#690005", "tertiary-container": "#958da7" }, borderRadius: { DEFAULT: "0.25rem", lg: "0.5rem", xl: "0.75rem", full: "9999px" }, spacing: { "space-xs": "0.25rem", "gutter": "1.5rem", "gutter-mobile": "1rem", "margin-mobile": "1.25rem", "space-xl": "2.5rem", "space-lg": "1.5rem", "space-md": "1rem", "space-sm": "0.5rem", "margin": "3rem" }, fontFamily: { "body-sm": ["Geist"], "display-hero-mobile": ["Geist"], "display-hero": ["Geist"], "headline-md": ["Geist"], "body-lg": ["Geist"], "label-key": ["JetBrains Mono"], "label-code": ["JetBrains Mono"], "editorial-quote": ["Newsreader"], "headline-lg": ["Geist"] }, fontSize: { "body-sm": ["14px", { lineHeight: "22px", letterSpacing: "0em", fontWeight: "400" }], "display-hero-mobile": ["36px", { lineHeight: "44px", letterSpacing: "-0.03em", fontWeight: "600" }], "display-hero": ["56px", { lineHeight: "64px", letterSpacing: "-0.04em", fontWeight: "600" }], "headline-md": ["24px", { lineHeight: "32px", letterSpacing: "-0.02em", fontWeight: "500" }], "body-lg": ["16px", { lineHeight: "26px", letterSpacing: "-0.01em", fontWeight: "400" }], "label-key": ["11px", { lineHeight: "14px", letterSpacing: "0.04em", fontWeight: "600" }], "label-code": ["12px", { lineHeight: "16px", letterSpacing: "0.02em", fontWeight: "500" }], "editorial-quote": ["22px", { lineHeight: "34px", letterSpacing: "-0.01em", fontWeight: "400" }], "headline-lg": ["32px", { lineHeight: "40px", letterSpacing: "-0.03em", fontWeight: "600" }] } } } };</script><style>@layer base { html, body { width: 100%; margin: 0; padding: 0; } body { overscroll-behavior-y: none; } .pb-safe { padding-bottom: env(safe-area-inset-bottom, 0px); } .pt-safe { padding-top: env(safe-area-inset-top, 0px); } } ::-webkit-scrollbar { display: none; }</style><style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head><body class="bg-surface text-on-surface font-body-sm text-body-sm min-h-screen flex flex-col antialiased selection:bg-primary selection:text-on-primary"><header class="fixed top-0 w-full z-50 pt-safe bg-surface/80 backdrop-blur-xl shadow-[0_1px_8px_rgba(0,0,0,0.04)]"><div class="h-16 px-gutter-mobile flex items-center justify-between"><div class="flex items-center gap-space-xs"><button aria-label="Go Back" class="w-11 h-11 flex items-center justify-center rounded-lg text-on-surface-variant hover:text-on-surface hover:bg-surface-container-high transition-colors" onclick="history.back()" type="button"><span class="material-symbols-outlined text-[20px]">arrow_back</span></button><img alt="Brand logo. - Primary color: #8b5cf6
+- Font: geist
+- Mode: dark
+- Roundness: rounded-md
+" class="h-7 w-auto object-contain" src="https://lh3.googleusercontent.com/aida/AEtjO1WrsGhQwoBAAgtZsFXbnArVNYAlaBqFoeohG5gHRM2ob0C5b_9e1M4cuOsm5MyXIhjEFac1BId75lVwyI4yXtY6H9vuUE2A_hcNiPzm8eMfZn_lMPoQSoUYz1mH11YcE97Dy8pBp-p83HNL1aeYbhdGswNY0vbJ9Wzc7Po0wdfpyPDSvunBlFrjSI8kCIPKZhuqx_cy8neg1G7QRVMYhFOrO33Qn0ZBCHV9boa_QOcCUK7lNPId8lZvBg4"/><h1 class="font-headline-md text-headline-md text-on-surface ml-space-xs truncate max-w-[180px]">Decision Result</h1></div><div class="flex items-center gap-space-sm"><div class="w-8 h-8 rounded-full bg-primary flex items-center justify-center"><span class="material-symbols-outlined text-on-primary text-[18px]">person</span></div><button aria-label="Close flow" class="w-11 h-11 flex items-center justify-center rounded-lg text-on-surface-variant hover:text-on-surface hover:bg-surface-container-high transition-colors" onclick="window.location.href='#'" type="button"><span class="material-symbols-outlined text-[20px]">close</span></button></div></div></header><main class="flex-1 flex flex-col relative w-full pt-16 bg-surface pb-safe"><div class="flex flex-col w-full relative">
+<!-- Ambient Atmospheric Halo Background -->
+<div class="pointer-events-none absolute top-0 left-1/2 -translate-x-1/2 w-80 h-80 rounded-full bg-primary-container/10 blur-[100px] -z-10"></div>
+<!-- Content Container with mobile gutters -->
+<div class="flex flex-col px-gutter-mobile pt-space-md pb-32 gap-space-lg">
+<!-- Top Badge / Step Status Tag -->
+<div class="flex items-center justify-between">
+<div class="inline-flex items-center gap-space-xs px-space-sm py-1 rounded-full bg-surface-container-high shadow-sm">
+<span class="w-1.5 h-1.5 rounded-full bg-primary animate-pulse"></span>
+<span class="font-label-key text-label-key text-on-surface-variant tracking-wider uppercase">05 / 05 · DECIDED</span>
+</div>
+<div class="flex items-center gap-1.5 font-label-code text-label-code text-on-surface-variant bg-surface-container-low px-space-sm py-1 rounded-full">
+<span class="material-symbols-outlined text-[14px] text-primary">lock</span>
+<span>VAULT ENCRYPTED</span>
+</div>
+</div>
+<!-- Hero Recommendation Block -->
+<div class="flex flex-col gap-space-sm">
+<p class="font-label-code text-label-code uppercase tracking-widest text-primary font-semibold">Decisive Resolution</p>
+<h2 class="font-display-hero-mobile text-display-hero-mobile text-on-surface leading-tight tracking-tight">
+        Take The New Job.
+      </h2>
+<!-- Narrative Quote -->
+<div class="p-space-md rounded-xl bg-surface-container-low shadow-sm">
+<p class="font-editorial-quote text-editorial-quote text-on-surface italic">
+          “Based on what matters most to you, this option provides significantly higher growth and flexibility, decisively outweighing the baseline stability trade-offs.”
+        </p>
+</div>
+</div>
+<!-- Center Stage: Score Ring & Direct Comparison -->
+<div class="flex flex-col items-center justify-center p-space-lg rounded-xl bg-surface-container relative overflow-hidden shadow-xl">
+<!-- Glow ambient behind dial -->
+<div class="absolute -top-10 w-44 h-44 rounded-full bg-primary/20 blur-3xl pointer-events-none"></div>
+<!-- Custom SVG Score Ring -->
+<div class="relative w-44 h-44 flex items-center justify-center">
+<svg class="w-full h-full -rotate-90 transform" viewbox="0 0 160 160">
+<!-- Background track -->
+<circle class="text-surface-container-highest" cx="80" cy="80" fill="transparent" r="66" stroke="currentColor" stroke-width="8"></circle>
+<!-- Animated Progress Fill (82%) -->
+<circle class="text-primary transition-all duration-1000 ease-out shadow-sm" cx="80" cy="80" fill="transparent" r="66" stroke="currentColor" stroke-dasharray="414.69" stroke-dashoffset="74.64" stroke-linecap="round" stroke-width="8"></circle>
+</svg>
+<div class="absolute inset-0 flex flex-col items-center justify-center text-center">
+<span class="font-label-code text-label-code uppercase text-on-surface-variant tracking-wider">FIT SCORE</span>
+<div class="flex items-baseline">
+<span class="font-headline-lg text-headline-lg font-bold text-on-surface">82</span>
+<span class="font-label-key text-label-key text-on-surface-variant ml-0.5">/100</span>
+</div>
+<span class="inline-flex items-center gap-1 font-label-key text-label-key text-primary font-semibold tracking-wide uppercase mt-0.5">
+<span class="material-symbols-outlined text-[13px]" style="font-variation-settings: 'FILL' 1;">verified</span>
+            OPTIMAL PATH
+          </span>
+</div>
+</div>
+<!-- Side-by-Side Comparison Segmented Chips -->
+<div class="grid grid-cols-2 gap-space-xs w-full mt-space-lg">
+<div class="flex flex-col items-center p-space-sm rounded-lg bg-surface-container-high shadow-sm">
+<span class="font-label-code text-label-code text-primary font-medium">RECOMMENDED</span>
+<span class="font-body-sm text-body-sm font-semibold text-on-surface truncate">New Job</span>
+<span class="font-label-key text-label-key text-on-surface-variant">Score 82</span>
+</div>
+<div class="flex flex-col items-center p-space-sm rounded-lg bg-surface-container-low opacity-75">
+<span class="font-label-code text-label-code text-on-secondary-container">BASELINE</span>
+<span class="font-body-sm text-body-sm font-normal text-on-surface truncate">Current Job</span>
+<span class="font-label-key text-label-key text-on-surface-variant">Score 74</span>
+</div>
+</div>
+</div>
+<!-- Section: Why This Decision (Recommendation Breakdown) -->
+<div class="flex flex-col gap-space-sm">
+<div class="flex items-center justify-between">
+<h3 class="font-headline-md text-headline-md text-on-surface">Why This Decision</h3>
+<span class="font-label-code text-label-code text-on-surface-variant uppercase">Ranked Impact</span>
+</div>
+<!-- Breakdown Metric Row 1: Growth -->
+<div class="flex flex-col p-space-md rounded-xl bg-surface-container gap-space-xs shadow-sm">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-space-xs">
+<span class="font-label-code text-label-code text-primary font-semibold">01</span>
+<span class="font-body-lg text-body-lg font-medium text-on-surface">Growth Velocity</span>
+</div>
+<span class="font-label-key text-label-key text-on-surface-variant bg-surface-container-high px-space-xs py-0.5 rounded">Critical · 5/5</span>
+</div>
+<div class="flex items-center gap-space-sm mt-1">
+<div class="h-2 w-full bg-surface-container-highest rounded-full overflow-hidden">
+<div class="h-full bg-primary rounded-full" style="width: 92%;"></div>
+</div>
+<span class="font-label-code text-label-code font-semibold text-on-surface min-w-[32px] text-right">92%</span>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Unlocks senior leadership trajectory within 14 months.</p>
+</div>
+<!-- Breakdown Metric Row 2: Flexibility -->
+<div class="flex flex-col p-space-md rounded-xl bg-surface-container gap-space-xs shadow-sm">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-space-xs">
+<span class="font-label-code text-label-code text-primary font-semibold">02</span>
+<span class="font-body-lg text-body-lg font-medium text-on-surface">Autonomy &amp; Flexibility</span>
+</div>
+<span class="font-label-key text-label-key text-on-surface-variant bg-surface-container-high px-space-xs py-0.5 rounded">High · 4/5</span>
+</div>
+<div class="flex items-center gap-space-sm mt-1">
+<div class="h-2 w-full bg-surface-container-highest rounded-full overflow-hidden">
+<div class="h-full bg-primary-container rounded-full" style="width: 88%;"></div>
+</div>
+<span class="font-label-code text-label-code font-semibold text-on-surface min-w-[32px] text-right">88%</span>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Async schedule with non-mandated in-office attendance.</p>
+</div>
+<!-- Breakdown Metric Row 3: Income -->
+<div class="flex flex-col p-space-md rounded-xl bg-surface-container gap-space-xs shadow-sm">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-space-xs">
+<span class="font-label-code text-label-code text-primary font-semibold">03</span>
+<span class="font-body-lg text-body-lg font-medium text-on-surface">Total Compensation</span>
+</div>
+<span class="font-label-key text-label-key text-on-surface-variant bg-surface-container-high px-space-xs py-0.5 rounded">Medium · 3/5</span>
+</div>
+<div class="flex items-center gap-space-sm mt-1">
+<div class="h-2 w-full bg-surface-container-highest rounded-full overflow-hidden">
+<div class="h-full bg-tertiary rounded-full" style="width: 76%;"></div>
+</div>
+<span class="font-label-code text-label-code font-semibold text-on-surface min-w-[32px] text-right">76%</span>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant">+22% base uplift with competitive equity refreshers.</p>
+</div>
+</div>
+<!-- Dedicated Trade-Off Analysis Card -->
+<div class="flex flex-col p-space-md rounded-xl bg-on-tertiary-container/60 shadow-lg relative overflow-hidden">
+<div class="flex items-center gap-space-xs text-primary mb-space-xs">
+<span class="material-symbols-outlined text-[18px]">sync_alt</span>
+<span class="font-label-code text-label-code font-bold uppercase tracking-wider">The Trade-Off Analysis</span>
+</div>
+<p class="font-body-lg text-body-lg text-on-surface leading-relaxed">
+        You will give up some established team stability in exchange for accelerated career growth, personal autonomy, and higher upside.
+      </p>
+<div class="flex items-center gap-space-xs mt-space-sm text-on-surface-variant font-label-key text-label-key">
+<span class="material-symbols-outlined text-[14px]">psychology</span>
+<span>Cognitive alignment: 94% confidence threshold</span>
+</div>
+</div>
+<!-- Visual Anchor: Focused Clarity Graphic -->
+<div class="w-full h-36 rounded-xl overflow-hidden relative shadow-md bg-surface-container-low flex items-center justify-center">
+<div class="absolute inset-0 bg-cover bg-center opacity-40 mix-blend-luminosity" data-alt="An abstract calm minimalist visual of overlapping obsidian and deep violet geometric glass shapes in soft studio light, symbolizing decision clarity and high resolution thought processes." style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuD5nrJpt5m2d-8sXzrzt9S9ydjkf9t-2zo8TfZmgEbrP4fcVvkkbbe4FL3iImOesOh1KBfGmV_mF3s77eAal5JWAlKs1ESnlmdRFMVOl4mMSuU0qGX2Mld6WlSoA7_Kej1vv1TP4dbDFoblyGVjHr3IphDwmgqiE5UjXPy5kY7Qzs-Feba8hNb0Wux1m8bq2UArayP-0-R6z6r4ESKEehTY0hWOt3EYIz_AHcj3m3HtkSlLkVkUzwmP')"></div>
+<div class="relative z-10 flex flex-col items-center text-center px-space-md">
+<span class="material-symbols-outlined text-primary text-[28px] mb-1">spa</span>
+<span class="font-body-sm text-body-sm font-medium text-on-surface">Decision Fatigue Relieved</span>
+<span class="font-label-key text-label-key text-on-surface-variant">Synthesized from 12 personal priority signals</span>
+</div>
+</div>
+</div>
+<!-- Sticky Bottom Bar Actions with Backdrop Blur -->
+<div class="fixed bottom-0 left-0 right-0 z-40 bg-surface/90 backdrop-blur-xl px-gutter-mobile pt-space-sm pb-safe flex flex-col gap-space-xs shadow-[0_-8px_30px_rgba(0,0,0,0.5)]">
+<!-- Primary Action Button -->
+<button class="w-full h-12 rounded-xl bg-primary text-on-primary font-body-lg text-body-lg font-semibold flex items-center justify-center gap-space-xs active:scale-[0.98] transition-transform shadow-lg shadow-primary/20" id="commit-btn" type="button">
+<span class="material-symbols-outlined text-[20px]">check</span>
+<span>I'm going with this (Save Decision)</span>
+</button>
+<!-- Secondary Text Button -->
+<button class="w-full py-2 text-center text-on-surface-variant hover:text-on-surface font-body-sm text-body-sm transition-colors" type="button">
+      View full reasoning &amp; matrix
+    </button>
+<!-- Toast Notification (Zero Telemetry Proof) -->
+<div class="flex items-center justify-center gap-1.5 py-1 text-on-surface-variant font-label-key text-label-key" id="save-toast">
+<span class="material-symbols-outlined text-[13px] text-primary">verified_user</span>
+<span>✓ Saved to local vault · Zero telemetry</span>
+</div>
+</div>
+</div>
+<script>
+  (function() {
+    const commitBtn = document.getElementById('commit-btn');
+    const toast = document.getElementById('save-toast');
+
+    if (commitBtn && toast) {
+      commitBtn.addEventListener('click', function() {
+        commitBtn.classList.add('bg-primary-container');
+        commitBtn.innerHTML = `
+          <span class="material-symbols-outlined text-[20px]">done_all</span>
+          <span>Decision Committed</span>
+        `;
+        toast.classList.remove('text-on-surface-variant');
+        toast.classList.add('text-primary');
+        toast.innerHTML = `
+          <span class="material-symbols-outlined text-[13px]">lock_open</span>
+          <span>✓ Locked & Archiving to On-Device Obsidian Core</span>
+        `;
+      });
+    }
+  })();
+</script></main></body></html>
