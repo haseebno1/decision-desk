@@ -8,6 +8,7 @@ import { useDecisions } from '@/features/decisions/decisionStore'
 import { DecisionWorkspace } from '@/features/decisions/DecisionWorkspace'
 import { ResultScreen } from '@/features/decisions/ResultScreen'
 import { HistoryScreen } from '@/features/history/HistoryScreen'
+import { PatternsScreen } from '@/features/patterns/PatternsScreen'
 import { parseHash, serializeRoute, type Route } from '@/lib/routes'
 
 const NAV_ITEMS: ReadonlyArray<{ id: string; label: string }> = [
@@ -93,7 +94,7 @@ function AppRoutes() {
       screen = <HistoryScreen onOpen={(id) => setRoute({ name: 'edit-decision', id })} />
       break
     case 'patterns':
-      screen = <PlaceholderScreen label="Patterns" />
+      screen = <PatternsScreen />
       break
   }
 
@@ -124,19 +125,6 @@ function NotFound({ onBack }: { onBack: () => void }) {
       <Button variant="secondary" onClick={onBack}>
         Back home
       </Button>
-    </div>
-  )
-}
-
-function PlaceholderScreen({ label }: { label: string }) {
-  return (
-    <div className="flex flex-col items-center gap-3 py-20 text-center">
-      <p className="text-sm font-medium tracking-widest text-slate-400 uppercase">
-        {label}
-      </p>
-      <p className="max-w-sm text-slate-500">
-        Coming in a later phase of the implementation plan.
-      </p>
     </div>
   )
 }

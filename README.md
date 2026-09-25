@@ -29,7 +29,7 @@ Implementation follows `docs/IMPLEMENTATION-PLAN.md`:
 - [x] Phase 2 — Criteria & Scoring
 - [x] Phase 3 — Recommendation
 - [x] Phase 4 — History
-- [ ] Phase 5 — Patterns
+- [x] Phase 5 — Patterns
 - [ ] Phase 6 — Outcome Review
 - [ ] Phase 7 — AI Adapter
 - [ ] Phase 8 — Polish
