@@ -14,6 +14,8 @@ export interface DecisionStore {
     patch: Partial<Omit<Decision, 'id' | 'createdAt'>>,
   ) => void
   deleteDecision: (id: string) => void
+  /** Restore a previously deleted decision (undo). */
+  restoreDecision: (decision: Decision, atFront?: boolean) => void
   /** Lock a decision at its current recommendation. */
   commitDecision: (id: string, chosenOptionId: string) => void
   /** Attach or replace the retrospective on a committed decision. */

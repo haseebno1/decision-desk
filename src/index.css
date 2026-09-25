@@ -13,3 +13,62 @@
 body {
   @apply bg-slate-950 text-slate-100 antialiased;
 }
+
+/* Consistent visible focus for keyboard users across all interactive elements. */
+a:focus-visible,
+button:focus-visible,
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible,
+[tabindex]:focus-visible {
+  outline: 2px solid theme('colors.emerald.400');
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+/* Skip link: hidden until keyboard-focused. */
+.skip-link {
+  position: absolute;
+  top: -100%;
+  left: 1rem;
+  z-index: 50;
+  border-radius: 0.5rem;
+  background: theme('colors.emerald.500');
+  padding: 0.5rem 1rem;
+  font-size: theme('fontSize.sm');
+  font-weight: 600;
+  color: theme('colors.emerald.950');
+}
+
+.skip-link:focus {
+  top: 0.75rem;
+}
+
+/* Micro-interactions: gentle entrances, disabled under reduced motion. */
+@keyframes dd-fade-up {
+  from {
+    opacity: 0;
+    transform: translateY(4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fade-up {
+  animation: dd-fade-up 200ms ease-out both;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-fade-up {
+    animation: none;
+  }
+
+  *,
+  *::before,
+  *::after {
+    transition-duration: 0.01ms !important;
+    animation-duration: 0.01ms !important;
+  }
+}

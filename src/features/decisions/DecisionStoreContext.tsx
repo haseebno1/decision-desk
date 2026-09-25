@@ -37,6 +37,19 @@ export function DecisionStoreProvider({ children }: { children: ReactNode }) {
     setDecisions((prev) => prev.filter((d) => d.id !== id))
   }, [])
 
+  const restoreDecision = useCallback<DecisionStore['restoreDecision']>(
+    (decision, atFront = true) => {
+      setDecisions((prev) =>
+        prev.some((d) => d.id === decision.id)
+          ? prev
+          : atFront
+            ? [decision, ...prev]
+            : [...prev, decision],
+      )
+    },
+    [],
+  )
+
   const commitDecision = useCallback<DecisionStore['commitDecision']>(
     (id, chosenOptionId) => {
       const now = new Date().toISOString()
@@ -80,10 +93,11 @@ export function DecisionStoreProvider({ children }: { children: ReactNode }) {
       createDecision,
       updateDecision,
       deleteDecision,
+      restoreDecision,
       commitDecision,
       reviewOutcome,
     }),
-    [decisions, createDecision, updateDecision, deleteDecision, commitDecision, reviewOutcome],
+    [decisions, createDecision, updateDecision, deleteDecision, restoreDecision, commitDecision, reviewOutcome],
   )
 
   return (

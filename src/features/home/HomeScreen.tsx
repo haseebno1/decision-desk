@@ -1,6 +1,7 @@
 import { Button } from '@/components/ui/Button'
 import { CATEGORY_LABELS, STAKE_LABELS, type Decision } from '@/types/decision'
 import { useDecisions } from '@/features/decisions/decisionStore'
+import { useToast } from '@/features/decisions/toastStore'
 
 interface HomeScreenProps {
   onStart: () => void
@@ -8,7 +9,17 @@ interface HomeScreenProps {
 }
 
 export function HomeScreen({ onStart, onEdit }: HomeScreenProps) {
-  const { decisions, deleteDecision } = useDecisions()
+  const { decisions, deleteDecision, restoreDecision } = useDecisions()
+  const { showToast } = useToast()
+
+  const handleDelete = (decision: Decision) => {
+    deleteDecision(decision.id)
+    showToast({
+      message: `Deleted “${decision.title}”.`,
+      actionLabel: 'Undo',
+      onAction: () => restoreDecision(decision),
+    })
+  }
   const draftCount = decisions.filter((d) => d.status === 'draft').length
   const committedCount = decisions.length - draftCount
   const summary = [
@@ -58,7 +69,7 @@ export function HomeScreen({ onStart, onEdit }: HomeScreenProps) {
                 <DecisionCard
                   decision={decision}
                   onEdit={() => onEdit(decision.id)}
-                  onDelete={() => deleteDecision(decision.id)}
+                  onDelete={() => handleDelete(decision)}
                 />
               </li>
             ))}
@@ -84,7 +95,7 @@ function DecisionCard({
   })
 
   return (
-    <article className="flex items-center justify-between gap-4 rounded-xl border border-slate-800 bg-slate-900/60 p-4">
+    <article className="flex flex-col gap-3 rounded-xl border border-slate-800 bg-slate-900/60 p-4 transition-colors hover:border-slate-700 sm:flex-row sm:items-center sm:justify-between sm:gap-4">
       <div className="min-w-0">
         <h3 className="truncate font-medium text-slate-100">{decision.title}</h3>
         <p className="mt-0.5 text-sm text-slate-500">

@@ -1,12 +1,15 @@
-import { useCallback, useEffect, useState, type ReactNode } from 'react'
+import { useCallback, useEffect, useRef, useState, type ReactNode } from 'react'
 import { AppShell } from '@/components/layout/AppShell'
 import { Button } from '@/components/ui/Button'
+import { ErrorBoundary } from '@/components/ErrorBoundary'
 import { HomeScreen } from '@/features/home/HomeScreen'
 import { DecisionForm } from '@/features/decisions/DecisionForm'
 import { DecisionStoreProvider } from '@/features/decisions/DecisionStoreContext'
 import { useDecisions } from '@/features/decisions/decisionStore'
 import { DecisionWorkspace } from '@/features/decisions/DecisionWorkspace'
 import { ResultScreen } from '@/features/decisions/ResultScreen'
+import { ToastProvider } from '@/features/decisions/ToastContext'
+import { useToast } from '@/features/decisions/toastStore'
 import { HistoryScreen } from '@/features/history/HistoryScreen'
 import { PatternsScreen } from '@/features/patterns/PatternsScreen'
 import { parseHash, serializeRoute, type Route } from '@/lib/routes'
@@ -18,9 +21,21 @@ const NAV_ITEMS: ReadonlyArray<{ id: string; label: string }> = [
   { id: 'patterns', label: 'Patterns' },
 ]
 
+/** Page titles per top-level route, set on navigation for screen-reader/UX context. */
+const TITLES: Record<Route['name'], string> = {
+  home: 'Decision Desk',
+  'new-decision': 'New decision — Decision Desk',
+  'edit-decision': 'Decision — Decision Desk',
+  result: 'Recommendation — Decision Desk',
+  history: 'History — Decision Desk',
+  patterns: 'Patterns — Decision Desk',
+}
+
 function AppRoutes() {
   const { decisions } = useDecisions()
   const [route, setRouteState] = useState<Route>(() => parseHash(window.location.hash))
+  const mainRef = useRef<HTMLElement | null>(null)
+  const isFirstRender = useRef(true)
 
   useEffect(() => {
     const onHashChange = () => {
@@ -29,6 +44,16 @@ function AppRoutes() {
     window.addEventListener('hashchange', onHashChange)
     return () => window.removeEventListener('hashchange', onHashChange)
   }, [])
+
+  // Focus management + page title on navigation (not on initial load).
+  useEffect(() => {
+    document.title = TITLES[route.name]
+    if (isFirstRender.current) {
+      isFirstRender.current = false
+      return
+    }
+    mainRef.current?.focus({ preventScroll: false })
+  }, [route])
 
   const setRoute = useCallback((next: Route) => {
     const hash = serializeRoute(next)
@@ -78,16 +103,19 @@ function AppRoutes() {
         screen = <NotFound onBack={() => setRoute({ name: 'home' })} />
         break
       }
-      screen =
-        route.name === 'result' || decision.status === 'committed' ? (
-          <ResultScreen decision={decision} onBack={() => setRoute({ name: 'home' })} />
-        ) : (
-          <DecisionWorkspace
-            decision={decision}
-            onSaved={() => setRoute({ name: 'result', id: decision.id })}
-            onCancel={() => setRoute({ name: 'home' })}
-          />
-        )
+      screen = (
+        <div key={decision.id} className="animate-fade-up">
+          {route.name === 'result' || decision.status === 'committed' ? (
+            <ResultScreen decision={decision} onBack={() => setRoute({ name: 'home' })} />
+          ) : (
+            <DecisionWorkspace
+              decision={decision}
+              onSaved={() => setRoute({ name: 'result', id: decision.id })}
+              onCancel={() => setRoute({ name: 'home' })}
+            />
+          )}
+        </div>
+      )
       break
     }
     case 'history':
@@ -99,17 +127,38 @@ function AppRoutes() {
   }
 
   return (
-    <AppShell navItems={NAV_ITEMS} activeRoute={activeRouteId} onNavigate={navigate}>
+    <AppShell navItems={NAV_ITEMS} activeRoute={activeRouteId} onNavigate={navigate} mainRef={mainRef}>
       {screen}
     </AppShell>
   )
 }
 
+function StorageErrorWatcher() {
+  const { showToast } = useToast()
+
+  useEffect(() => {
+    const onStorageError = (event: Event) => {
+      const detail = (event as CustomEvent<string>).detail
+      showToast({ message: detail ?? 'Changes could not be saved.' })
+    }
+    window.addEventListener('decision-desk:storage-error', onStorageError)
+    return () =>
+      window.removeEventListener('decision-desk:storage-error', onStorageError)
+  }, [showToast])
+
+  return null
+}
+
 export default function App() {
   return (
-    <DecisionStoreProvider>
-      <AppRoutes />
-    </DecisionStoreProvider>
+    <ErrorBoundary>
+      <ToastProvider>
+        <DecisionStoreProvider>
+          <StorageErrorWatcher />
+          <AppRoutes />
+        </DecisionStoreProvider>
+      </ToastProvider>
+    </ErrorBoundary>
   )
 }
 

@@ -32,5 +32,5 @@ Implementation follows `docs/IMPLEMENTATION-PLAN.md`:
 - [x] Phase 5 — Patterns
 - [x] Phase 6 — Outcome Review
 - [x] Phase 7 — AI Adapter
-- [ ] Phase 8 — Polish
+- [x] Phase 8 — Polish
 - [ ] Phase 9 — Release
