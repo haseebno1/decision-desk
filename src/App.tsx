@@ -1,4 +1,4 @@
-import { useState, type ReactNode } from 'react'
+import { useCallback, useEffect, useState, type ReactNode } from 'react'
 import { AppShell } from '@/components/layout/AppShell'
 import { Button } from '@/components/ui/Button'
 import { HomeScreen } from '@/features/home/HomeScreen'
@@ -8,14 +8,7 @@ import { useDecisions } from '@/features/decisions/decisionStore'
 import { DecisionWorkspace } from '@/features/decisions/DecisionWorkspace'
 import { ResultScreen } from '@/features/decisions/ResultScreen'
 import { HistoryScreen } from '@/features/history/HistoryScreen'
-
-type Route =
-  | { name: 'home' }
-  | { name: 'new-decision' }
-  | { name: 'edit-decision'; id: string }
-  | { name: 'result'; id: string }
-  | { name: 'history' }
-  | { name: 'patterns' }
+import { parseHash, serializeRoute, type Route } from '@/lib/routes'
 
 const NAV_ITEMS: ReadonlyArray<{ id: string; label: string }> = [
   { id: 'home', label: 'Home' },
@@ -25,14 +18,35 @@ const NAV_ITEMS: ReadonlyArray<{ id: string; label: string }> = [
 ]
 
 function AppRoutes() {
-  const [route, setRoute] = useState<Route>({ name: 'home' })
   const { decisions } = useDecisions()
+  const [route, setRouteState] = useState<Route>(() => parseHash(window.location.hash))
+
+  useEffect(() => {
+    const onHashChange = () => {
+      setRouteState(parseHash(window.location.hash))
+    }
+    window.addEventListener('hashchange', onHashChange)
+    return () => window.removeEventListener('hashchange', onHashChange)
+  }, [])
+
+  const setRoute = useCallback((next: Route) => {
+    const hash = serializeRoute(next)
+    if (window.location.hash !== hash) {
+      window.location.hash = hash // triggers hashchange -> setRouteState
+    } else {
+      setRouteState(next)
+    }
+  }, [])
 
   const navigate = (id: string) => {
-    if (id === 'home') setRoute({ name: 'home' })
-    else if (id === 'new-decision') setRoute({ name: 'new-decision' })
-    else if (id === 'history') setRoute({ name: 'history' })
-    else if (id === 'patterns') setRoute({ name: 'patterns' })
+    if (
+      id === 'home' ||
+      id === 'new-decision' ||
+      id === 'history' ||
+      id === 'patterns'
+    ) {
+      setRoute({ name: id })
+    }
   }
 
   const activeRouteId =
