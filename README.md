@@ -31,6 +31,6 @@ Implementation follows `docs/IMPLEMENTATION-PLAN.md`:
 - [x] Phase 4 — History
 - [x] Phase 5 — Patterns
 - [x] Phase 6 — Outcome Review
-- [ ] Phase 7 — AI Adapter
+- [x] Phase 7 — AI Adapter
 - [ ] Phase 8 — Polish
 - [ ] Phase 9 — Release

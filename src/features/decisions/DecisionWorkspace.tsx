@@ -3,6 +3,7 @@ import { DecisionForm } from './DecisionForm'
 import { CriteriaEditor } from './CriteriaEditor'
 import { ScoreMatrix } from './ScoreMatrix'
 import { Button } from '@/components/ui/Button'
+import { AiAssistPanel } from './AiAssistPanel'
 import { useDecisions } from './decisionStore'
 import { pruneScores, summarizeScoring } from '@/lib/scoring'
 import type { Criterion, Decision, ScoreMatrix as ScoreMatrixData } from '@/types/decision'
@@ -67,6 +68,8 @@ export function DecisionWorkspace({
           onChange={handleCriteriaChange}
         />
       </section>
+
+      <AiAssistPanel decision={decision} />
 
       <section aria-labelledby="scores-heading" className="flex flex-col gap-4">
         <div className="flex items-baseline justify-between gap-4">
