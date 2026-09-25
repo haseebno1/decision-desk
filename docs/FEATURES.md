@@ -6,6 +6,10 @@ A precise inventory of what the application does **today**. Everything listed
 here is implemented, browser-verified and covered by the test suite unless
 explicitly marked otherwise.
 
+**Companion documents:** `docs/SCREENS.md` (every route, its desktop and
+mobile composition, and its states), `docs/UI-IMPROVEMENTS.md` (what's next),
+`docs/ARCHITECTURE.md` (engine design).
+
 - Product: Decision Fatigue Killer / "Decision Desk"
 - Tagline: _Stop circling. Start deciding._
 - Architecture: local-first, no account, no backend, no network calls unless
@@ -182,6 +186,16 @@ records; nothing is fabricated or predicted.
   close-call count, and review satisfaction/redo summary.
 - Empty state before any decisions exist.
 
+UI: presented as a chart-led page — KPI row; a donut of decision stage
+(Reviewed / Decided / Still drafts); a satisfaction histogram; ranked bars by
+category and criteria; a stacked stake profile with the average-satisfaction
+and would-redo figures; insights in a two-column grid. Charts are hand-rolled
+SVG/CSS (`src/features/patterns/charts.tsx`) with **no charting dependency**,
+and each is one `role="img"` whose `aria-label` enumerates the data it draws.
+The only figures on the page that are not from the report are direct counts of
+stored records (stage, review ratings) — no score or average is recomputed in
+the component.
+
 ---
 
 ## 10. AI assist — optional adapter (`src/lib/ai/`)
@@ -201,6 +215,16 @@ records; nothing is fabricated or predicted.
 - Settings (provider, base URL, API key, model) persist in
   `decision-desk.ai-settings.v1`; the key is browser-local and never sent
   anywhere except the configured endpoint.
+- Structured suggestions: a `criteria-suggestions` response may carry
+  `suggestedCriteria` (label + proposed weight) alongside the prose, which the
+  panel renders as an **Add N criteria to this decision** button. Applying trims
+  and matches labels case-insensitively against what the decision already has
+  (and against earlier items in the same batch), so it can never duplicate;
+  weights are clamped into the 1–5 range; the criteria are appended with fresh
+  ids, confirmed by a toast and an inline note naming them, and the result then
+  reads **Applied ✓**. The merge lives in `src/lib/ai/applyCriteria.ts` with its
+  own tests. A provider that returns only prose degrades gracefully — prose plus
+  a **Copy** button, no apply action.
 - UI: collapsible panel in the draft workspace with capability buttons,
   "thinking" state, error surface (`role="alert"`), and styled results.
   Switching decisions resets stale AI output at render time.
@@ -212,6 +236,14 @@ records; nothing is fabricated or predicted.
 
 - Persistence: `localStorage` under `decision-desk.decisions.v1`
   (`src/lib/storage.ts`).
+- Sidebar preference: `localStorage` under `decision-desk.sidebar.v1`
+  (`"expanded"` / `"collapsed"`, desktop only, `src/lib/sidebar.ts`). Applied
+  pre-paint like the theme so a collapsed rail never flashes open.
+- Theme preference: `localStorage` under `decision-desk.theme.v1`
+  (`src/lib/theme.ts`) — `"dark"` or `"light"`, written only when the user uses
+  the toggle. Absent means "follow the OS". Applied pre-paint by a script in
+  `index.html`, so there is no flash of the wrong theme. Additive key: no
+  existing stored shape changed.
 - Every read is structurally validated (`isDecision`) so outdated or
   corrupted records are dropped instead of crashing the UI; unparsable
   payloads fall back to an empty list and log an error.
@@ -232,10 +264,22 @@ records; nothing is fabricated or predicted.
   New decision, History, Patterns), hairline separator, and a "Local data"
   status chip; top bar with a persistent New-decision action; content column
   constrained for editorial line lengths.
-- **Mobile (<768 px)**: slim top bar with brand and local-vault status, plus a
-  bottom navigation bar with an elevated circular "Decide" action.
+- **Mobile (<768 px)**: slim top bar with brand, local-vault status and the
+  theme toggle, plus a bottom navigation bar with an elevated circular
+  "Decide" action. The mobile bars are deliberately **opaque** (no
+  `backdrop-filter`): a translucent sticky bar can stop repainting mid-scroll
+  in embedded WebViews and vanish while scrolling.
 - Active route is exposed with `aria-current="page"`; a skip link jumps to
   `#main-content`.
+- **Theme toggle**: sun/moon switch in the desktop top bar (36 px) and the
+  mobile top bar (40 px), `aria-pressed` plus an action-labelled `aria-label`.
+- **Sidebar toggle** (desktop only): hides the navigation rail so content can
+  use the full width; `aria-pressed` reflects the collapsed state. Implemented
+  as a `data-sidebar` attribute on `<html>` scoped by CSS, not React state, so
+  the pre-paint script can apply it without a flash. Persisted under
+  `decision-desk.sidebar.v1`.
+- The content column is a full-height flex column, so `<main>` absorbs spare
+  space and the footer anchors to the viewport on short pages.
 
 ---
 
@@ -253,9 +297,20 @@ DFK "Calm Intelligence", derived from the Google Stitch project
 | accent (electric violet) | `#7c4ee8` fill, text variant `#c4b0fb`, wash `rgba(124,78,232,0.18)`, hover/glow hue `#8b5cf6` |
 | danger | `#f27c8a` |
 | radius | `0.85rem` cards, `0.625rem` controls |
+| shadows | `--shadow-glow` / `-lg` (primary hover), `-marker` / `-soft` (leader dots, timeline nodes), `-tile` / `-strong` (raised and selected controls), `-cell` (pressed score cell), `-lift` (card hover), `-float` (toasts) |
+| bloom | `--bloom`, the verdict-dial `drop-shadow` hue |
 
+- **Light mode**: the same tokens are overridden in one
+  `html[data-theme='light']` block — canvas `#f7f6fa`, surface `#ffffff`,
+  ink `#1a1626`, accent `#6d28d9` (hover darkens to `#5b21b6`), danger
+  `#b4232f`, and softened shadows. Worst-case measured ratios: ink 12.8:1,
+  ink-soft 5.6:1, ink-faint 4.8:1, accent-text 5.1:1, white-on-accent 7.1:1.
+  No component branches on the theme — see `docs/SCREENS.md` §Theme.
 - Defined once in `src/index.css` via Tailwind 4 `@theme`; used as utilities
   (`bg-canvas`, `text-ink-soft`, `border-hairline`, `text-accent-text`, …).
+- **No colour value lives outside `src/index.css`** — every glow, bloom and
+  hover fill is a token, which is what makes theming possible without touching
+  a single component.
 - Contrast: every text pairing clears WCAG AA on every surface tier (ink 13.6:1,
   ink-soft 6.06:1, ink-faint 4.83:1, accent-text 7.79:1, danger 5.71:1 worst
   case) and white on the primary fill is 5.11:1. The measured audit lives in
@@ -277,11 +332,15 @@ DFK "Calm Intelligence", derived from the Google Stitch project
   `verbatimModuleSyntax`), Vite 8, Tailwind CSS 4, ESLint 10 flat config with
   `typescript-eslint`, Vitest 5 (jsdom for AI tests).
 - Scripts: `dev`, `build` (`tsc -b && vite build`), `lint`, `typecheck`,
-  `test`, `check` (lint + typecheck + test).
-- Tests: 47 across 5 files — scoring (9), patterns (13), recommendation (10),
-  routes (3), AI adapter (12).
-- Preview helper: `scripts/preview-server.mjs` serves the built `dist/`
-  as static files.
+  `test` / `test:watch`, `check` (lint + typecheck + test), `preview`,
+  `seed:demo`.
+- Tests: one suite per module under `src/lib` — scoring, patterns,
+  recommendation, routes, AI adapter, the new apply-criteria merge, theme,
+  sidebar and utils. Everything under `src/lib` is covered; UI is verified in
+  the browser.
+- Preview: `npm run preview` (`vite preview`) serves the built `dist/`. The
+  build uses relative asset URLs (`base: './'`) so the same output works at a
+  domain root, in a subdirectory, or on GitHub Pages.
 
 ---
 

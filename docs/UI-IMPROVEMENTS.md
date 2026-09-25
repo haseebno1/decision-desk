@@ -1,8 +1,9 @@
 # UI Improvements & Roadmap
 
-_Companion to `docs/FEATURES.md` (what exists) and `stitch/design-system.md`
-(the visual source of truth). Written after the "Calm Intelligence" redesign
-landed in commit `2c82ec4`._
+_Companion to `docs/FEATURES.md` (what exists), `docs/SCREENS.md` (where every
+route and surface lives) and `stitch/design-system.md` (the visual source of
+truth). Written after the "Calm Intelligence" redesign landed in commit
+`2c82ec4`._
 
 Guiding constraint from the redesign brief: **change the interface, not the
 product.** Items below are labelled by blast radius so it is always clear
@@ -218,7 +219,38 @@ Verified ratios (worst case across all six surfaces): ink 13.58, ink-soft 6.06,
 ink-faint 4.83, accent-text 7.79, danger 5.71, white-on-accent 5.11 — **all
 AA-passing**, and the accent fill stays ≥3.25:1 against every surface.
 
-### D2. Light ("white") mode — spec
+### D2. Light ("white") mode — shipped
+
+**Status: implemented.** The spec below is what was built. A single attribute on
+`<html>` (`data-theme`) swaps the whole token set in `src/index.css`; every
+utility in the app resolves through `var(--color-*)`, so no component knows
+which theme is active. `src/lib/theme.ts` holds the rules (stored choice wins,
+otherwise follow the OS, otherwise dark), an inline script in `index.html`
+applies it before first paint so there is no flash, and the sun/moon toggle
+lives in the desktop top bar and the mobile top bar. The choice persists under
+the additive key `decision-desk.theme.v1` — no existing stored shape changed.
+
+Implemented values (every text pairing measured, worst case in brackets):
+
+| Token | Dark (unchanged) | Light | Light-mode check |
+| --- | --- | --- | --- |
+| canvas | `#09080d` | `#f7f6fa` | — |
+| surface → surface-top | `#111018` → `#292532` | `#ffffff` → `#ded8ee` | six tiers, white cards |
+| ink | `#f5f3fa` | `#1a1626` | 12.8:1 |
+| ink-soft | `#a8a2b6` | `#554f66` | 5.6:1 |
+| ink-faint | `#96909f` | `#605974` | 4.8:1 (first draft `#6b6480` failed at 4.03:1) |
+| hairline / strong | `#3a3446` / `#4a4359` | `#dcd7e8` / `#c4bcd8` | 1.4:1 structural |
+| accent (fill) | `#7c4ee8` | `#6d28d9` | white labels 7.1:1 |
+| accent-bright (hover) | `#8b5cf6` | `#5b21b6` | hover darkens, not lightens |
+| accent-text | `#c4b0fb` | `#6d28d9` | 5.1:1 on the strongest fill |
+| danger | `#f27c8a` | `#b4232f` | 4.7:1 on the strongest fill |
+| `--shadow-*` | violet bloom | softened (`0.18`–`0.3` alpha) + neutral lift | glow on white reads as a smudge |
+
+Also handled: `color-scheme` (native controls and scrollbars), `accent-color`,
+`::selection`, the `theme-color` meta, and the `theme()` calls that Tailwind had
+**inlined** into `.skip-link` and the focus outline — those were hard-coded to
+the dark violet and had to become `var(--color-accent)` before light mode could
+reach them.
 
 **Goal.** Daylight legibility, print/PDF export and projector use, without
 turning the product into a second design language: same geometry, same single
@@ -295,6 +327,31 @@ load; the visual-regression baseline gains a light variant for each route;
 ---
 
 ## Part E — Patterns redesign: modern UI + charts
+
+**Status: shipped.** The screen is now chart-led: a KPI row, a stage donut
+("Where they stand"), a satisfaction histogram ("How it felt afterwards"),
+ranked bars by category and criteria, a stacked stake profile beside the
+average-satisfaction / would-redo pair, and the engine's insights in a
+two-column grid.
+
+Built as specced in E3: a **hand-rolled SVG/CSS kit**
+(`src/features/patterns/charts.tsx` — `Donut`, `RankedBars`, `StackedBar`,
+`ColumnChart`), so no charting dependency was added and the single-accent rule
+holds (three accent opacities plus a neutral). E2 is intact — nothing on the
+page recomputes a score: the only new numbers are **direct counts of stored
+records** (how far each decision got, how each review was rated). E7 ships as
+one `role="img"` per chart whose `aria-label` enumerates the data.
+
+Two things worth carrying forward:
+
+- **No entrance animation on data marks.** The first cut grew bars from
+`scale(0)`; in a WebView where the animation does not advance that renders an
+empty chart, because `animation-fill-mode` keeps the first frame. Bars now use
+width/height transitions, whose resting state is the real value. This is why
+the `dd-grow-*` keyframes were removed from `src/index.css`.
+- The natural next step from E4 remains the **winner-score distribution**
+(needs a per-decision total surfaced from the engine, not computed in the
+component).
 
 ### E1. What the page is today
 
@@ -469,6 +526,9 @@ Ordered by value-to-effort, each with an honest note about scope. Items marked
 
 ## Part G — Accessibility & performance hardening
 
+- **Theme — both modes shipped, see Part D2.** Light mode is implemented with
+a measured token set; the glows, hairlines and accent fill all have verified
+ratios in both directions.
 - **Contrast — done, see Part D1.** The three failures identified in the audit
   (muted text on `surface-top`, white-on-accent button labels, and the
   `ink-faint` tier) are fixed and re-verified: every text pairing now clears
@@ -484,7 +544,9 @@ Ordered by value-to-effort, each with an honest note about scope. Items marked
 - **Automated a11y checks** — add axe-core to the Vitest setup and run it over
   the rendered Home/Workspace/Result screens; catches regressions that
   typecheck cannot.
-- **Payload discipline** — the bundle is ~306 kB JS / ~59 kB CSS raw. Route
+- **Payload discipline** — the bundle is ~322 kB JS / ~62 kB CSS raw (94 kB and
+  11 kB gzipped, measured after light mode, the Patterns charts and the
+  AI-apply work). Route
   level `React.lazy` for History/Patterns plus a manual chunk for the engine
   would keep the first paint (Home → capture) fast as features are added.
 - **No-layout-shift guarantee** — once webfonts load (A1), reserve metrics or
@@ -574,9 +636,10 @@ independently — each is useful on its own._
 six charts built only from numbers `buildPatternsReport` already computes, a
 table-view fallback, partial states.
 
-**3b · Light mode (D2, F15)** — the verified light tokens, the pre-paint theme
-script, a three-state (`system | dark | light`) toggle, then the glows / wash /
-selection / chart-grid audit so both modes stay one design language.
+**3b · Light mode (D2, F15)** — **shipped** as a two-state toggle (the
+pre-paint resolution still follows the OS until the user chooses, so no third
+control is needed). Remaining: the chart-grid colours wait on 3a, and a light
+visual-regression baseline belongs with Part H.
 
 **3c · Data ownership, capture conveniences + sensitivity lab (Part F)** —
 export (F1) → import (F2) → data controls (F3) → duplicate / re-run (F4) →

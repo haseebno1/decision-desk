@@ -94,3 +94,35 @@ Prefer:
 Avoid:
 
 > You're a person who always chooses convenience.
+
+---
+
+## As implemented
+
+Where the rules above live in the code, and how they behave:
+
+- **`src/lib/ai/types.ts` — the capability contract.** Providers are asked for
+  structured output on `criteria-suggestions` (`suggestedCriteria`: label plus a
+  proposed 1–5 weight) *in addition* to the prose, so the panel can offer an
+  **Add N criteria to this decision** button instead of making you retype
+  suggestions. Structured output is optional: a provider that ignores the
+  request omits it, and the panel falls back to showing the prose with a
+  **Copy** button.
+- **`src/lib/ai/applyCriteria.ts` — what pressing that button does.** Labels are
+  trimmed and matched case-insensitively against the criteria already on the
+  decision and against earlier items in the same batch, so applying twice can
+  never duplicate. Weights are clamped to the app's 1–5 range before anything is
+  written. It returns what it added and what it rejected, so the panel can name
+  both honestly.
+- **`src/lib/ai/openAiProvider.ts` / `mockProvider.ts` — prompts and
+  fallback.** The built-in provider is deterministic, offline and needs no key,
+  so the whole flow is inspectable without configuring an endpoint. It also
+  skips criteria the decision already has, which is why a second run typically
+  reports "your criteria already cover the usual suspects" rather than
+  resuggesting them.
+
+User agency is enforced by splitting the work: **the assistant never
+recommends.** It clarifies, questions and summarises; the weighted recommendation
+comes from `src/lib/recommendation.ts` and is explained on the result screen. A
+close call is reported as a close call whether or not AI is configured, and
+nothing in the assistant's output is presented as a verdict.
